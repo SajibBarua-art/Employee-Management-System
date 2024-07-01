@@ -8,6 +8,7 @@ import org.checkerframework.checker.units.qual.A;
 
 
 // To transport data between client and server
+// To use this as a response of REST API
 @Getter
 @Setter
 @NoArgsConstructor

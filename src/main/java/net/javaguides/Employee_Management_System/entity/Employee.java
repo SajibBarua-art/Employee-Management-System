@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
+@Entity // used to specify that a class is an entity and is mapped to a database table
 @Table(name="empolyees")
 public class Employee {
     @Id

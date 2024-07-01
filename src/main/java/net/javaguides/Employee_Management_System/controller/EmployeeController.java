@@ -38,4 +38,19 @@ public class EmployeeController {
         List<EmployeeDto> employees = employeeService.getAllEmployees();
         return ResponseEntity.ok(employees);
     }
+
+    // Build update REST api
+    @PutMapping("{id}")
+    public ResponseEntity<EmployeeDto> updateEmployee(@PathVariable("id") long employeeId,
+                                                      @RequestBody EmployeeDto updatedEmployeeDto) {
+        EmployeeDto employeeDto = employeeService.updateEmployee(employeeId, updatedEmployeeDto);
+        return ResponseEntity.ok(employeeDto);
+    }
+
+    // Build delete employee rest api
+    @DeleteMapping("{id}")
+    public ResponseEntity<String> deleteEmployee(@PathVariable("id") long employeeId) {
+        employeeService.deleteEmployee(employeeId);
+        return ResponseEntity.ok("Employee deleted successfully");
+    }
 }
