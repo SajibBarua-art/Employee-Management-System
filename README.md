@@ -1,2 +1,2 @@
 # Employee-Management-System
-# Employee-Management-System
+Database Internal Architecture: [Show](https://miro.com/welcomeonboard/OWZ1YVVVUnFodFNCdWtXbmVlQVRmUFB3UDBlUWgwWTJtUElrOFUxV2MyZ2txdjRWb1RIallyS2pmVUZ4MzhuV3wzNDU4NzY0NTE4MDg2NzUwNTU4fDI=?share_link_id=142566152786)
