@@ -1,17 +1,21 @@
 package net.javaguides.Employee_Management_System.service.implementation;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import net.javaguides.Employee_Management_System.dto.EmployeeDto;
 import net.javaguides.Employee_Management_System.entity.Employee;
+import net.javaguides.Employee_Management_System.entity.Role;
 import net.javaguides.Employee_Management_System.entity.TodoList;
 import net.javaguides.Employee_Management_System.exception.ResourceNotFoundException;
 import net.javaguides.Employee_Management_System.mapper.EmployeeMapper;
 import net.javaguides.Employee_Management_System.repository.EmployeeRepository;
+import net.javaguides.Employee_Management_System.repository.RoleRepository;
 import net.javaguides.Employee_Management_System.repository.TodoListRepository;
 import net.javaguides.Employee_Management_System.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,15 +29,28 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Autowired
     private TodoListRepository todoListRepository;
 
+    @Autowired
+    private RoleRepository roleRepository;
+
     @Override
     public EmployeeDto createEmployee(EmployeeDto employeeDto) {
         // to convert EmployeeDta into employee
         // because we need to store employee into the database
         Employee employee = EmployeeMapper.mapToEmployee(employeeDto);
 
+        // Handle TodoList relationship
         if (employee.getTodoList() != null) {
             TodoList todoList = employee.getTodoList();
             todoList.setEmployee(employee);
+        }
+
+        // Handle Role relationship
+        if (employee.getRole() != null) {
+            Role role = employee.getRole();
+            if (role.getEmployees() == null) {
+                role.setEmployees(new ArrayList<>());
+            }
+            role.getEmployees().add(employee);
         }
 
         // we don't have to store todoList entity at database here

@@ -6,20 +6,21 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TodoList {
+@Entity
+public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long tid;
+    private Long rid;
 
-    private String title;
-    private String description;
-    private int priority;
+    private String roleName;
 
-    @OneToOne(mappedBy = "todoList")
+    @OneToMany(mappedBy = "role")
     @JsonBackReference
-    private Employee employee;
+    private List<Employee> employees = new ArrayList<>();
 }
