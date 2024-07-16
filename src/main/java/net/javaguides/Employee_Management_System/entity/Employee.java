@@ -25,4 +25,8 @@ public class Employee {
 
     @Column(name="email_id", nullable = false, unique = true)
     private String email;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "todo_list_id")
+    private TodoList todoList;
 }
