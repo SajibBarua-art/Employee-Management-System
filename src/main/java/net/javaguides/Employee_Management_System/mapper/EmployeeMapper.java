@@ -11,7 +11,8 @@ public class EmployeeMapper {
                  employee.getLastName(),
                  employee.getEmail(),
                 employee.getTodoList(),
-                employee.getRole()
+                employee.getRole(),
+                employee.getProjects()
         );
     }
 
@@ -22,7 +23,8 @@ public class EmployeeMapper {
                 employeeDto.getLastName(),
                 employeeDto.getEmail(),
                 employeeDto.getTodoList(),
-                employeeDto.getRole()
+                employeeDto.getRole(),
+                employeeDto.getProjects()
         );
     }
 }

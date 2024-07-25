@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -35,4 +38,7 @@ public class Employee {
     @ManyToOne(cascade = CascadeType.ALL)
     @JsonManagedReference
     private Role role;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    private List<Project> projects = new ArrayList<>();
 }

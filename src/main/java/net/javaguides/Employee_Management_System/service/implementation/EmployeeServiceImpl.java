@@ -4,11 +4,13 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import net.javaguides.Employee_Management_System.dto.EmployeeDto;
 import net.javaguides.Employee_Management_System.entity.Employee;
+import net.javaguides.Employee_Management_System.entity.Project;
 import net.javaguides.Employee_Management_System.entity.Role;
 import net.javaguides.Employee_Management_System.entity.TodoList;
 import net.javaguides.Employee_Management_System.exception.ResourceNotFoundException;
 import net.javaguides.Employee_Management_System.mapper.EmployeeMapper;
 import net.javaguides.Employee_Management_System.repository.EmployeeRepository;
+import net.javaguides.Employee_Management_System.repository.ProjectRepository;
 import net.javaguides.Employee_Management_System.repository.RoleRepository;
 import net.javaguides.Employee_Management_System.repository.TodoListRepository;
 import net.javaguides.Employee_Management_System.service.EmployeeService;
@@ -32,6 +34,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Autowired
     private RoleRepository roleRepository;
 
+    @Autowired
+    private ProjectRepository projectRepository;
+
     @Override
     public EmployeeDto createEmployee(EmployeeDto employeeDto) {
         // to convert EmployeeDta into employee
@@ -51,6 +56,19 @@ public class EmployeeServiceImpl implements EmployeeService {
                 role.setEmployees(new ArrayList<>());
             }
             role.getEmployees().add(employee);
+        }
+
+        // Handle Projects relationship
+        if(employee.getProjects() != null) {
+            List<Project> projects = employee.getProjects();
+            if(projects != null) {
+                for(Project project : projects) {
+                    if(project.getEmployees() == null) {
+                        project.setEmployees(new ArrayList<>());
+                    }
+                    project.getEmployees().add(employee);
+                }
+            }
         }
 
         // we don't have to store todoList entity at database here

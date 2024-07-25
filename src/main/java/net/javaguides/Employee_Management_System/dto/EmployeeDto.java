@@ -4,8 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.javaguides.Employee_Management_System.entity.Project;
 import net.javaguides.Employee_Management_System.entity.Role;
 import net.javaguides.Employee_Management_System.entity.TodoList;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 // To transport data between client and server
@@ -22,4 +26,5 @@ public class EmployeeDto {
 
     private TodoList todoList;
     private Role role;
+    private List<Project> projects = new ArrayList<>();
 }
