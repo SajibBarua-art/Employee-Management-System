@@ -32,13 +32,19 @@ public class Employee {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "todo_list_id")
-    @JsonManagedReference
+//    @JsonManagedReference // Serialize TodoList when serializing Employee
     private TodoList todoList;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JsonManagedReference
+    @JoinColumn(name = "role_id")
+//    @JsonManagedReference // Serialize Role when serializing Employee
     private Role role;
 
     @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "employee_projects",
+            joinColumns = @JoinColumn(name = "employee_id"),
+            inverseJoinColumns = @JoinColumn(name = "project_id")
+    )
     private List<Project> projects = new ArrayList<>();
 }
