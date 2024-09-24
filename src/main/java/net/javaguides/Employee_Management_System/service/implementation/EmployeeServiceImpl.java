@@ -1,19 +1,22 @@
 package net.javaguides.Employee_Management_System.service.implementation;
 
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import net.javaguides.Employee_Management_System.dto.EmployeeDto;
 import net.javaguides.Employee_Management_System.entity.Employee;
 import net.javaguides.Employee_Management_System.entity.Project;
 import net.javaguides.Employee_Management_System.entity.Role;
 import net.javaguides.Employee_Management_System.entity.TodoList;
-import net.javaguides.Employee_Management_System.exception.ResourceNotFoundException;
+import net.javaguides.Employee_Management_System.exception.EmailAlreadyExistsException;
+import net.javaguides.Employee_Management_System.exception.EmployeeNotFoundException;
 import net.javaguides.Employee_Management_System.mapper.EmployeeMapper;
 import net.javaguides.Employee_Management_System.repository.EmployeeRepository;
 import net.javaguides.Employee_Management_System.repository.ProjectRepository;
 import net.javaguides.Employee_Management_System.repository.RoleRepository;
 import net.javaguides.Employee_Management_System.repository.TodoListRepository;
 import net.javaguides.Employee_Management_System.service.EmployeeService;
+import net.javaguides.Employee_Management_System.service.MessageService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +27,8 @@ import java.util.stream.Collectors;
 @Service // to create spring bean for this class
 @AllArgsConstructor
 public class EmployeeServiceImpl implements EmployeeService {
+    private static final Logger logger = LoggerFactory.getLogger(EmployeeServiceImpl.class);
+
     // inject the dependency
     @Autowired
     private EmployeeRepository employeeRepository;
@@ -36,9 +41,17 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Autowired
     private ProjectRepository projectRepository;
+    @Autowired
+    private MessageService messageService;
 
     @Override
     public EmployeeDto createEmployee(EmployeeDto employeeDto) {
+        if(employeeRepository.existsByEmail(employeeDto.getEmail())) {
+            logger.error("Email Already Exists {}", employeeDto.getEmail());
+            throw new EmailAlreadyExistsException(
+                    messageService.getMessage("employee.email.exists", employeeDto.getEmail())
+            );
+        }
         // to convert EmployeeDta into employee
         // because we need to store employee into the database
         Employee employee = EmployeeMapper.mapToEmployee(employeeDto);
@@ -70,7 +83,6 @@ public class EmployeeServiceImpl implements EmployeeService {
                 }
             }
         }
-
         // we don't have to store todoList entity at database here
         // because we used cascadeType.ALL in the entity
 
@@ -83,7 +95,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public EmployeeDto getEmployeeById(long employeeId) {
         Employee employee = employeeRepository.findById(employeeId)
-                .orElseThrow(() -> new ResourceNotFoundException("Employee is not exist with the given ID: " + employeeId));
+                .orElseThrow(() -> new EmployeeNotFoundException(
+                        messageService.getMessage("employee.notfound", employeeId)
+                ));
 
         return EmployeeMapper.mapToEmployeeDto(employee);
     }
@@ -98,8 +112,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public EmployeeDto updateEmployee(long employeeId, EmployeeDto updatedEmployeeDto) {
         Employee employee = employeeRepository.findById(employeeId).orElseThrow(
-                () -> new ResourceNotFoundException("Employee is not exist with the given ID: " + employeeId)
-        );
+                () -> new EmployeeNotFoundException(
+                        messageService.getMessage("employee.notfound", employeeId)
+                ));
 
         employee.setFirstName(updatedEmployeeDto.getFirstName());
         employee.setLastName(updatedEmployeeDto.getLastName());
@@ -112,8 +127,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public void deleteEmployee(long employeeId) {
         Employee employee = employeeRepository.findById(employeeId).orElseThrow(
-                () -> new ResourceNotFoundException("Employee is not exist with the given ID: " + employeeId)
-        );
+                () -> new EmployeeNotFoundException(
+                        messageService.getMessage("employee.notfound", employeeId)
+                ));
 
         employeeRepository.deleteById(employeeId);
     }

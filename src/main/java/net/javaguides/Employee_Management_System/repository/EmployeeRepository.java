@@ -6,4 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
                                                     // <Type of the entity, Type of the primary key>
     // this will help us to connect Database to the repository layer
+    boolean existsByEmail(String email);
 }
