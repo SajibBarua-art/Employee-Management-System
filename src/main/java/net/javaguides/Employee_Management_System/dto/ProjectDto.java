@@ -19,6 +19,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ProjectDto {
     private Long pid;
+    private String projectName;
 
     private List<Employee> employees = new ArrayList<>();
 }

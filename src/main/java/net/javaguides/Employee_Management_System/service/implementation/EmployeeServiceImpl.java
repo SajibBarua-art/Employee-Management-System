@@ -120,6 +120,16 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setLastName(updatedEmployeeDto.getLastName());
         employee.setEmail(updatedEmployeeDto.getEmail());
 
+        // Update Projects
+        List<Project> projects = updatedEmployeeDto.getProjects().stream()
+                .map(projectDto -> {
+                    Project project = projectRepository.findById(projectDto.getPid())
+                            .orElse(new Project(projectDto.getPid(), projectDto.getProjectName(), new ArrayList<>()));
+                    return project;
+                })
+                .collect(Collectors.toList());
+        employee.setProjects(projects);
+
         Employee savedEmployee = employeeRepository.save(employee);
         return EmployeeMapper.mapToEmployeeDto(savedEmployee);
     }

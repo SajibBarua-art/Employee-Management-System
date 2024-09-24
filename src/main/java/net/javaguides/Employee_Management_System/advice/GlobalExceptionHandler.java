@@ -2,6 +2,7 @@ package net.javaguides.Employee_Management_System.advice;
 
 import net.javaguides.Employee_Management_System.exception.EmailAlreadyExistsException;
 import net.javaguides.Employee_Management_System.exception.EmployeeNotFoundException;
+import net.javaguides.Employee_Management_System.exception.ProjectNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -41,6 +42,19 @@ public class GlobalExceptionHandler {
         errorDetails.put("error", "Email Already Exists");
 
         return new ResponseEntity<>(errorDetails, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler({ProjectNotFoundException.class})
+    public ResponseEntity<Map<String, Object>> handleProjectNotFoundException(ProjectNotFoundException e){
+        logger.error("Handling ProjectNotFoundException: {}", e.getMessage());
+
+        Map<String, Object> errorDetails = new HashMap<>();
+        errorDetails.put("timestamp", LocalDateTime.now());
+        errorDetails.put("message", e.getMessage());
+        errorDetails.put("status", HttpStatus.NOT_FOUND.value());
+        errorDetails.put("error", "Project Not Found");
+
+        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler({RuntimeException.class})
