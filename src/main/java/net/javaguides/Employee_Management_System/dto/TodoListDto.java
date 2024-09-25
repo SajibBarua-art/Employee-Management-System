@@ -1,10 +1,9 @@
 package net.javaguides.Employee_Management_System.dto;
 
-import jakarta.persistence.OneToOne;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.javaguides.Employee_Management_System.entity.Employee;
-import net.javaguides.Employee_Management_System.entity.Role;
+import net.javaguides.Employee_Management_System.entity.Designation;
 
 @Data
 @NoArgsConstructor
@@ -15,5 +14,5 @@ public class TodoListDto {
     private int priority;
 
     private Employee employee;
-    private Role role;
+    private Designation designation;
 }

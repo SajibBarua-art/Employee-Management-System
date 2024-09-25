@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.javaguides.Employee_Management_System.entity.Project;
-import net.javaguides.Employee_Management_System.entity.Role;
+import net.javaguides.Employee_Management_System.entity.Designation;
 import net.javaguides.Employee_Management_System.entity.TodoList;
 
 import java.util.ArrayList;
@@ -25,6 +25,6 @@ public class EmployeeDto {
     private String email;
 
     private TodoList todoList;
-    private Role role;
+    private Designation designation;
     private List<Project> projects = new ArrayList<>();
 }

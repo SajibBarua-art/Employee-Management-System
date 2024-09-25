@@ -4,14 +4,14 @@ import lombok.AllArgsConstructor;
 import net.javaguides.Employee_Management_System.dto.EmployeeDto;
 import net.javaguides.Employee_Management_System.entity.Employee;
 import net.javaguides.Employee_Management_System.entity.Project;
-import net.javaguides.Employee_Management_System.entity.Role;
+import net.javaguides.Employee_Management_System.entity.Designation;
 import net.javaguides.Employee_Management_System.entity.TodoList;
 import net.javaguides.Employee_Management_System.exception.EmailAlreadyExistsException;
 import net.javaguides.Employee_Management_System.exception.EmployeeNotFoundException;
 import net.javaguides.Employee_Management_System.mapper.EmployeeMapper;
 import net.javaguides.Employee_Management_System.repository.EmployeeRepository;
 import net.javaguides.Employee_Management_System.repository.ProjectRepository;
-import net.javaguides.Employee_Management_System.repository.RoleRepository;
+import net.javaguides.Employee_Management_System.repository.DesignationRepository;
 import net.javaguides.Employee_Management_System.repository.TodoListRepository;
 import net.javaguides.Employee_Management_System.service.EmployeeService;
 import net.javaguides.Employee_Management_System.service.MessageService;
@@ -37,7 +37,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     private TodoListRepository todoListRepository;
 
     @Autowired
-    private RoleRepository roleRepository;
+    private DesignationRepository designationRepository;
 
     @Autowired
     private ProjectRepository projectRepository;
@@ -62,13 +62,13 @@ public class EmployeeServiceImpl implements EmployeeService {
             todoList.setEmployee(employee);
         }
 
-        // Handle Role relationship
-        if (employee.getRole() != null) {
-            Role role = employee.getRole();
-            if (role.getEmployees() == null) {
-                role.setEmployees(new ArrayList<>());
+        // Handle designation relationship
+        if (employee.getDesignation() != null) {
+            Designation designation = employee.getDesignation();
+            if (designation.getEmployees() == null) {
+                designation.setEmployees(new ArrayList<>());
             }
-            role.getEmployees().add(employee);
+            designation.getEmployees().add(employee);
         }
 
         // Handle Projects relationship
@@ -119,6 +119,20 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setFirstName(updatedEmployeeDto.getFirstName());
         employee.setLastName(updatedEmployeeDto.getLastName());
         employee.setEmail(updatedEmployeeDto.getEmail());
+
+        // Handle TodoList relationship
+        if (updatedEmployeeDto.getTodoList() != null) {
+            employee.setTodoList(updatedEmployeeDto.getTodoList());
+        }
+
+        // Handle designation relationship
+        if (employee.getDesignation() != null) {
+            Designation designation = employee.getDesignation();
+            if (designation.getEmployees() == null) {
+                designation.setEmployees(new ArrayList<>());
+            }
+            designation.getEmployees().add(employee);
+        }
 
         // Update Projects
         List<Project> projects = updatedEmployeeDto.getProjects().stream()

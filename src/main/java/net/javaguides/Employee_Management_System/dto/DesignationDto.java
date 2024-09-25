@@ -10,9 +10,9 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RoleDto {
-    private Long rid;
-    private String roleName;
+public class DesignationDto {
+    private Long did;
+    private String designationName;
 
     private List<Employee> employees;
 }

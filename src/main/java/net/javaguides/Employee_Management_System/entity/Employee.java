@@ -1,6 +1,5 @@
 package net.javaguides.Employee_Management_System.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -35,8 +34,8 @@ public class Employee {
     private TodoList todoList;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "role_id")
-    private Role role;
+    @JoinColumn(name = "designation_id")
+    private Designation designation;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(

@@ -1,8 +1,6 @@
 package net.javaguides.Employee_Management_System.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,16 +13,16 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "roles")
-public class Role {
+@Table(name = "designations")
+public class Designation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long rid;
+    private Long did;
 
-    @Column(name = "role_name")
-    private String roleName;
+    @Column(name = "designation_name")
+    private String designationName;
 
-    @OneToMany(mappedBy = "role")
+    @OneToMany(mappedBy = "designation")
     @JsonIgnore
     private List<Employee> employees = new ArrayList<>();
 }
