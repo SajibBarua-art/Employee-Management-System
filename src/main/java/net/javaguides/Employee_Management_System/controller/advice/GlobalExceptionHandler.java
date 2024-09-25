@@ -1,4 +1,4 @@
-package net.javaguides.Employee_Management_System.advice;
+package net.javaguides.Employee_Management_System.controller.advice;
 
 import net.javaguides.Employee_Management_System.exception.EmailAlreadyExistsException;
 import net.javaguides.Employee_Management_System.exception.EmployeeNotFoundException;

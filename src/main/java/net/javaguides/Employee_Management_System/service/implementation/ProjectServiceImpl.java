@@ -11,6 +11,9 @@ import net.javaguides.Employee_Management_System.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @AllArgsConstructor
 public class ProjectServiceImpl implements ProjectService {
@@ -28,5 +31,44 @@ public class ProjectServiceImpl implements ProjectService {
                 ));
 
         return ProjectMapper.mapToProjectDto(project);
+    }
+
+    @Override
+    public List<ProjectDto> getAllProjects() {
+        List<Project> projects = projectRepository.findAll();
+        return projects.stream().map(project -> ProjectMapper.mapToProjectDto(project))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public ProjectDto createProject(ProjectDto projectDto) {
+        Project project = ProjectMapper.mapToProject(projectDto);
+
+        Project savedProject = projectRepository.save(project);
+
+        return ProjectMapper.mapToProjectDto(savedProject);
+    }
+
+    @Override
+    public ProjectDto updateProject(Long pid, ProjectDto projectDto) {
+        Project project = projectRepository.findById(pid)
+                .orElseThrow(() -> new ProjectNotFoundException(
+                        messageService.getMessage("project.notfound", pid)
+                ));
+
+        project.setProjectName(projectDto.getProjectName());
+        Project updatedProject = projectRepository.save(project);
+
+        return ProjectMapper.mapToProjectDto(projectRepository.save(updatedProject));
+    }
+
+    @Override
+    public void deleteProject(long projectId) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new ProjectNotFoundException(
+                        messageService.getMessage("project.notfound", projectId)
+                ));
+
+        projectRepository.deleteById(projectId);
     }
 }

@@ -1,6 +1,5 @@
 package net.javaguides.Employee_Management_System.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -23,7 +22,7 @@ public class Project {
     @Column(name = "project_name")
     private String projectName;
 
-    @ManyToMany(mappedBy = "projects")
+    @ManyToMany(mappedBy = "projects", cascade = {CascadeType.ALL})
     @JsonIgnore // Prevent serialization of Employees when serializing Project
     private List<Employee> employees = new ArrayList<>();
 }

@@ -8,6 +8,7 @@ import net.javaguides.Employee_Management_System.entity.Designation;
 import net.javaguides.Employee_Management_System.entity.TodoList;
 import net.javaguides.Employee_Management_System.exception.EmailAlreadyExistsException;
 import net.javaguides.Employee_Management_System.exception.EmployeeNotFoundException;
+import net.javaguides.Employee_Management_System.exception.ProjectNotFoundException;
 import net.javaguides.Employee_Management_System.mapper.EmployeeMapper;
 import net.javaguides.Employee_Management_System.repository.EmployeeRepository;
 import net.javaguides.Employee_Management_System.repository.ProjectRepository;
@@ -72,16 +73,34 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
 
         // Handle Projects relationship
-        if(employee.getProjects() != null) {
-            List<Project> projects = employee.getProjects();
-            if(projects != null) {
-                for(Project project : projects) {
-                    if(project.getEmployees() == null) {
+        if (employee.getProjects() != null) {
+            List<Project> projects = new ArrayList<>();
+            for (Project project : employee.getProjects()) {
+                if (project.getPid() != null) {
+                    // Fetch the existing project from the database by its ID
+                    Project existingProject = projectRepository.findById(project.getPid())
+                            .orElseThrow(() -> new ProjectNotFoundException(
+                                    messageService.getMessage("project.notFound", project.getPid())
+                            ));
+
+                    // Associate the existing project with the employee
+                    projects.add(existingProject);
+
+                    // Update the employees list of the project to include this employee
+                    if (existingProject.getEmployees() == null) {
+                        existingProject.setEmployees(new ArrayList<>());
+                    }
+                    existingProject.getEmployees().add(employee);
+                } else {
+                    // If project doesn't have an ID, it's a new project, so add it to the employee
+                    if (project.getEmployees() == null) {
                         project.setEmployees(new ArrayList<>());
                     }
                     project.getEmployees().add(employee);
+                    projects.add(project);
                 }
             }
+            employee.setProjects(projects); // Set the updated list of projects to the employee
         }
         // we don't have to store todoList entity at database here
         // because we used cascadeType.ALL in the entity
