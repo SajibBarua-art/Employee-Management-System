@@ -6,9 +6,7 @@ import net.javaguides.Employee_Management_System.entity.Employee;
 import net.javaguides.Employee_Management_System.entity.Project;
 import net.javaguides.Employee_Management_System.entity.Designation;
 import net.javaguides.Employee_Management_System.entity.TodoList;
-import net.javaguides.Employee_Management_System.exception.EmailAlreadyExistsException;
-import net.javaguides.Employee_Management_System.exception.EmployeeNotFoundException;
-import net.javaguides.Employee_Management_System.exception.ProjectNotFoundException;
+import net.javaguides.Employee_Management_System.exception.*;
 import net.javaguides.Employee_Management_System.mapper.EmployeeMapper;
 import net.javaguides.Employee_Management_System.repository.EmployeeRepository;
 import net.javaguides.Employee_Management_System.repository.ProjectRepository;
@@ -60,16 +58,49 @@ public class EmployeeServiceImpl implements EmployeeService {
         // Handle TodoList relationship
         if (employee.getTodoList() != null) {
             TodoList todoList = employee.getTodoList();
-            todoList.setEmployee(employee);
+            if (todoList.getTid() != null) {
+                // Fetch the existing TodoList from the database by its ID
+                TodoList existingTodoList = todoListRepository.findById(todoList.getTid())
+                        .orElseThrow(() -> new TodoListNotFoundException(
+                                messageService.getMessage("todoList.notfound", todoList.getTid())
+                        ));
+
+                // Associate the existing TodoList with the employee
+                employee.setTodoList(existingTodoList);
+
+                // Set the employee in the TodoList entity
+                existingTodoList.setEmployee(employee);
+            } else {
+                // For a new TodoList, set the employee
+                todoList.setEmployee(employee);
+            }
         }
 
-        // Handle designation relationship
+        // Handle Designation relationship
         if (employee.getDesignation() != null) {
             Designation designation = employee.getDesignation();
-            if (designation.getEmployees() == null) {
-                designation.setEmployees(new ArrayList<>());
+            if (designation.getDid() != null) {
+                // Fetch the existing Designation from the database by its ID
+                Designation existingDesignation = designationRepository.findById(designation.getDid())
+                        .orElseThrow(() -> new DesignationNotFoundException(
+                                messageService.getMessage("designation.notfound", designation.getDid())
+                        ));
+
+                // Associate the existing Designation with the employee
+                employee.setDesignation(existingDesignation);
+
+                // Add the employee to the Designation's employee list
+                if (existingDesignation.getEmployees() == null) {
+                    existingDesignation.setEmployees(new ArrayList<>());
+                }
+                existingDesignation.getEmployees().add(employee);
+            } else {
+                // For a new Designation, add the employee
+                if (designation.getEmployees() == null) {
+                    designation.setEmployees(new ArrayList<>());
+                }
+                designation.getEmployees().add(employee);
             }
-            designation.getEmployees().add(employee);
         }
 
         // Handle Projects relationship

@@ -16,7 +16,7 @@ import lombok.*;
 public class TodoList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long tid;
+    private Long tid;
 
     @Column(name="title")
     private String title;
@@ -25,7 +25,7 @@ public class TodoList {
     private String description;
 
     @Column(name="priority")
-    private int priority;
+    private Integer priority;
 
     @OneToOne(mappedBy = "todoList")
     @JsonIgnore

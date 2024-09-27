@@ -1,8 +1,6 @@
 package net.javaguides.Employee_Management_System.controller.advice;
 
-import net.javaguides.Employee_Management_System.exception.EmailAlreadyExistsException;
-import net.javaguides.Employee_Management_System.exception.EmployeeNotFoundException;
-import net.javaguides.Employee_Management_System.exception.ProjectNotFoundException;
+import net.javaguides.Employee_Management_System.exception.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -53,6 +51,32 @@ public class GlobalExceptionHandler {
         errorDetails.put("message", e.getMessage());
         errorDetails.put("status", HttpStatus.NOT_FOUND.value());
         errorDetails.put("error", "Project Not Found");
+
+        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler({DesignationNotFoundException.class})
+    public ResponseEntity<Map<String, Object>> handleDesignationNotFoundException(DesignationNotFoundException e){
+        logger.error("Handling DesignationNotFoundException: {}", e.getMessage());
+
+        Map<String, Object> errorDetails = new HashMap<>();
+        errorDetails.put("timestamp", LocalDateTime.now());
+        errorDetails.put("message", e.getMessage());
+        errorDetails.put("status", HttpStatus.NOT_FOUND.value());
+        errorDetails.put("error", "Designation Not Found");
+
+        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler({TodoListNotFoundException.class})
+    public ResponseEntity<Map<String, Object>> handleTodoListNotFoundException(TodoListNotFoundException e){
+        logger.error("Handling TodoListNotFoundException: {}", e.getMessage());
+
+        Map<String, Object> errorDetails = new HashMap<>();
+        errorDetails.put("timestamp", LocalDateTime.now());
+        errorDetails.put("message", e.getMessage());
+        errorDetails.put("status", HttpStatus.NOT_FOUND.value());
+        errorDetails.put("error", "TodoList Not Found");
 
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }

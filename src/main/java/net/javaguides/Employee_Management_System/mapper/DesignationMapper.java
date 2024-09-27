@@ -4,7 +4,7 @@ import net.javaguides.Employee_Management_System.dto.DesignationDto;
 import net.javaguides.Employee_Management_System.entity.Designation;
 
 public class DesignationMapper {
-    public static DesignationDto mapTodesignationDto(Designation designation) {
+    public static DesignationDto mapToDesignationDto(Designation designation) {
         return new DesignationDto(
                 designation.getDid(),
                 designation.getDesignationName(),
@@ -12,7 +12,7 @@ public class DesignationMapper {
         );
     }
 
-    public static Designation mapTodesignation(DesignationDto designationDto) {
+    public static Designation mapToDesignation(DesignationDto designationDto) {
         return new Designation(
                 designationDto.getDid(),
                 designationDto.getDesignationName(),
