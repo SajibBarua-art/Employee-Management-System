@@ -1,18 +1,15 @@
 package net.javaguides.Employee_Management_System.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity // used to specify that a class is an entity and is mapped to a database table
 @Table(name="employees")
 public class Employee {
@@ -29,6 +26,9 @@ public class Employee {
     @Column(name="email_id", nullable = false, unique = true)
     private String email;
 
+    @NonNull
+    private String password;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "todo_list_id", referencedColumnName = "tid")
     private TodoList todoList;
@@ -37,6 +37,13 @@ public class Employee {
     @JoinColumn(name = "designation_id")
     private Designation designation;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "employee_roles",
+            joinColumns = @JoinColumn(name = "employee_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
+
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "employee_projects",
@@ -44,4 +51,15 @@ public class Employee {
             inverseJoinColumns = @JoinColumn(name = "project_id")
     )
     private List<Project> projects = new ArrayList<>();
+
+    public Employee(long id, String firstName, String lastName, String email, TodoList todoList, Designation designation, Set<Role> roles, List<Project> projects) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.todoList = todoList;
+        this.designation = designation;
+        this.roles = roles;
+        this.projects = projects;
+    }
 }

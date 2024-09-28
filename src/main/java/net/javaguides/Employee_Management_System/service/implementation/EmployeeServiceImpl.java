@@ -2,25 +2,22 @@ package net.javaguides.Employee_Management_System.service.implementation;
 
 import lombok.AllArgsConstructor;
 import net.javaguides.Employee_Management_System.dto.EmployeeDto;
-import net.javaguides.Employee_Management_System.entity.Employee;
-import net.javaguides.Employee_Management_System.entity.Project;
-import net.javaguides.Employee_Management_System.entity.Designation;
-import net.javaguides.Employee_Management_System.entity.TodoList;
+import net.javaguides.Employee_Management_System.dto.EmployeeRequestDto;
+import net.javaguides.Employee_Management_System.entity.*;
 import net.javaguides.Employee_Management_System.exception.*;
 import net.javaguides.Employee_Management_System.mapper.EmployeeMapper;
-import net.javaguides.Employee_Management_System.repository.EmployeeRepository;
-import net.javaguides.Employee_Management_System.repository.ProjectRepository;
-import net.javaguides.Employee_Management_System.repository.DesignationRepository;
-import net.javaguides.Employee_Management_System.repository.TodoListRepository;
+import net.javaguides.Employee_Management_System.repository.*;
 import net.javaguides.Employee_Management_System.service.EmployeeService;
 import net.javaguides.Employee_Management_System.service.MessageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service // to create spring bean for this class
@@ -40,8 +37,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Autowired
     private ProjectRepository projectRepository;
+
     @Autowired
     private MessageService messageService;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     @Override
     public EmployeeDto createEmployee(EmployeeDto employeeDto) {
@@ -137,13 +138,29 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public EmployeeDto getEmployeeById(long employeeId) {
+    public EmployeeDto getEmployeeById(Long employeeId) {
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EmployeeNotFoundException(
                         messageService.getMessage("employee.notfound", employeeId)
                 ));
 
         return EmployeeMapper.mapToEmployeeDto(employee);
+    }
+
+    @Override
+    public EmployeeDto assignRoleToEmployee(Long employeeId, Long roleId) {
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new EmployeeNotFoundException(
+                        messageService.getMessage("employee.notfound", employeeId)
+                ));
+
+        Role role = roleRepository.findById(roleId)
+                .orElseThrow(() -> new RuntimeException("Role not found"));
+
+        employee.getRoles().add(role);
+        Employee savedEmployee = employeeRepository.save(employee);
+
+        return EmployeeMapper.mapToEmployeeDto(savedEmployee);
     }
 
     @Override

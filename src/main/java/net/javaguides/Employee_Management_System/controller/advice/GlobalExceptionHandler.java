@@ -16,15 +16,20 @@ import java.util.Map;
 public class GlobalExceptionHandler {
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
+    Map<String, Object> buildError(String message, Integer statusCode, String shortErrorMessage) {
+        Map<String, Object> errorDetails = new HashMap<>();
+        errorDetails.put("timestamp", LocalDateTime.now());
+        errorDetails.put("message", message);
+        errorDetails.put("status", statusCode);
+        errorDetails.put("error", shortErrorMessage);
+        return errorDetails;
+    }
+
     @ExceptionHandler({EmployeeNotFoundException.class})
     public ResponseEntity<Map<String, Object>> handleEmployeeNotFoundException(EmployeeNotFoundException e){
         logger.error("Handling EmployeeNotFoundException: {}", e.getMessage());
 
-        Map<String, Object> errorDetails = new HashMap<>();
-        errorDetails.put("timestamp", LocalDateTime.now());
-        errorDetails.put("message", e.getMessage());
-        errorDetails.put("status", HttpStatus.NOT_FOUND.value());
-        errorDetails.put("error", "Employee Not Found");
+        Map<String, Object> errorDetails = buildError(e.getMessage(), HttpStatus.NOT_FOUND.value(), "Employee Not Found!");
 
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }
@@ -33,11 +38,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, Object>> handleEmailAlreadyExistsException(EmailAlreadyExistsException e){
         logger.error("Handling EmailAlreadyExistsException: {}", e.getMessage());
 
-        Map<String, Object> errorDetails = new HashMap<>();
-        errorDetails.put("timestamp", LocalDateTime.now());
-        errorDetails.put("message", e.getMessage());
-        errorDetails.put("status", HttpStatus.CONFLICT.value());
-        errorDetails.put("error", "Email Already Exists");
+        Map<String, Object> errorDetails = buildError(e.getMessage(), HttpStatus.CONFLICT.value(), "Email Already Exists!");
 
         return new ResponseEntity<>(errorDetails, HttpStatus.CONFLICT);
     }
@@ -46,11 +47,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, Object>> handleProjectNotFoundException(ProjectNotFoundException e){
         logger.error("Handling ProjectNotFoundException: {}", e.getMessage());
 
-        Map<String, Object> errorDetails = new HashMap<>();
-        errorDetails.put("timestamp", LocalDateTime.now());
-        errorDetails.put("message", e.getMessage());
-        errorDetails.put("status", HttpStatus.NOT_FOUND.value());
-        errorDetails.put("error", "Project Not Found");
+        Map<String, Object> errorDetails = buildError(e.getMessage(), HttpStatus.NOT_FOUND.value(), "Project Not Found!");
 
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }
@@ -59,11 +56,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, Object>> handleDesignationNotFoundException(DesignationNotFoundException e){
         logger.error("Handling DesignationNotFoundException: {}", e.getMessage());
 
-        Map<String, Object> errorDetails = new HashMap<>();
-        errorDetails.put("timestamp", LocalDateTime.now());
-        errorDetails.put("message", e.getMessage());
-        errorDetails.put("status", HttpStatus.NOT_FOUND.value());
-        errorDetails.put("error", "Designation Not Found");
+        Map<String, Object> errorDetails = buildError(e.getMessage(), HttpStatus.NOT_FOUND.value(), "Designation Not Found");
 
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }
@@ -72,11 +65,16 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, Object>> handleTodoListNotFoundException(TodoListNotFoundException e){
         logger.error("Handling TodoListNotFoundException: {}", e.getMessage());
 
-        Map<String, Object> errorDetails = new HashMap<>();
-        errorDetails.put("timestamp", LocalDateTime.now());
-        errorDetails.put("message", e.getMessage());
-        errorDetails.put("status", HttpStatus.NOT_FOUND.value());
-        errorDetails.put("error", "TodoList Not Found");
+        Map<String, Object> errorDetails = buildError(e.getMessage(), HttpStatus.NOT_FOUND.value(), "Todo List Not Found");
+
+        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler({RoleNotFoundException.class})
+    public ResponseEntity<Map<String, Object>> handleRoleNotFoundException(RoleNotFoundException e){
+        logger.error("Handling RoleNotFoundException: {}", e.getMessage());
+
+        Map<String, Object> errorDetails = buildError(e.getMessage(), HttpStatus.NOT_FOUND.value(), "Role Not Found");
 
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }
