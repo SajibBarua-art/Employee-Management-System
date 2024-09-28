@@ -50,10 +50,10 @@ public class DesignationServiceImpl implements DesignationService {
     }
 
     @Override
-    public DesignationDto updateDesignation(Long pid, DesignationDto designationDto) {
-        Designation designation = designationRepository.findById(pid)
+    public DesignationDto updateDesignation(Long did, DesignationDto designationDto) {
+        Designation designation = designationRepository.findById(did)
                 .orElseThrow(() -> new DesignationNotFoundException(
-                        messageService.getMessage("designation.notfound", pid)
+                        messageService.getMessage("designation.notfound", did)
                 ));
 
         designation.setDesignationName(designationDto.getDesignationName());

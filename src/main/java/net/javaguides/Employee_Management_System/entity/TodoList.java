@@ -6,28 +6,40 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Table(name = "todo_lists")
 @Getter
 @Setter
-@Entity
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "todo_lists")
+@ToString(exclude = "employee") // To avoid circular reference in toString()
 public class TodoList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long tid;
 
-    @Column(name="title")
-    private String title;
+    @ElementCollection
+    @CollectionTable(name = "todo_fields", joinColumns = @JoinColumn(name = "todo_list_id"))
+    private List<TodoField> todoFields = new ArrayList<>();
 
-    @Column(name="description")
-    private String description;
+    // Embedded class representing the fields in the TodoList
+    @Embeddable
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @ToString
+    public static class TodoField {
+        @Column(name = "title")
+        private String title;
 
-    @Column(name="priority")
-    private Integer priority;
+        @Column(name = "description")
+        private String description;
 
-    @OneToOne(mappedBy = "todoList")
-    @JsonIgnore
-    private Employee employee;
+        @Column(name = "priority")
+        private Integer priority;
+    }
 }

@@ -67,12 +67,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 
                 // Associate the existing TodoList with the employee
                 employee.setTodoList(existingTodoList);
-
-                // Set the employee in the TodoList entity
-                existingTodoList.setEmployee(employee);
-            } else {
-                // For a new TodoList, set the employee
-                todoList.setEmployee(employee);
             }
         }
 

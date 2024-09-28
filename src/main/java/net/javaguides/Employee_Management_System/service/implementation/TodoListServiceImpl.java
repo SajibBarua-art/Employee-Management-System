@@ -50,15 +50,13 @@ public class TodoListServiceImpl implements TodoListService {
     }
 
     @Override
-    public TodoListDto updateTodoList(Long pid, TodoListDto todoListDto) {
-        TodoList todoList = todoListRepository.findById(pid)
+    public TodoListDto updateTodoList(Long tid, TodoListDto todoListDto) {
+        TodoList todoList = todoListRepository.findById(tid)
                 .orElseThrow(() -> new TodoListNotFoundException(
-                        messageService.getMessage("todoList.notfound", pid)
+                        messageService.getMessage("todoList.notfound", tid)
                 ));
 
-        todoList.setTitle(todoListDto.getTitle());
-        todoList.setDescription(todoListDto.getDescription());
-        todoList.setPriority(todoListDto.getPriority());
+        todoList.setTodoFields(todoListDto.getTodoFields());
         TodoList updatedTodoList = todoListRepository.save(todoList);
 
         return TodoListMapper.mapToTodoListDto(todoListRepository.save(updatedTodoList));

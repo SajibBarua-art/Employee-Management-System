@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity // used to specify that a class is an entity and is mapped to a database table
-@Table(name="empolyees")
+@Table(name="employees")
 public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,7 +30,7 @@ public class Employee {
     private String email;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "todo_list_id")
+    @JoinColumn(name = "todo_list_id", referencedColumnName = "tid")
     private TodoList todoList;
 
     @ManyToOne(cascade = CascadeType.ALL)
