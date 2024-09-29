@@ -1,0 +1,278 @@
+databaseChangeLog:
+- changeSet:
+    id: 1727583919681-1
+    author: k452b (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: employees_pkey
+            name: id
+            type: BIGINT
+        - column:
+            name: first_name
+            type: VARCHAR(255)
+        - column:
+            name: last_name
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: email_id
+            type: VARCHAR(255)
+        - column:
+            name: todo_list_id
+            type: BIGINT
+        - column:
+            name: designation_id
+            type: BIGINT
+        - column:
+            name: password
+            type: VARCHAR(255)
+        tableName: employees
+- changeSet:
+    id: 1727583919681-2
+    author: k452b (generated)
+    changes:
+    - addUniqueConstraint:
+        columnNames: email_id
+        constraintName: employees_email_id_key
+        tableName: employees
+- changeSet:
+    id: 1727583919681-3
+    author: k452b (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: designations_pkey
+            name: did
+            type: BIGINT
+        - column:
+            name: designation_name
+            type: VARCHAR(255)
+        tableName: designations
+- changeSet:
+    id: 1727583919681-4
+    author: k452b (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: employee_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: project_id
+            type: BIGINT
+        tableName: employee_projects
+- changeSet:
+    id: 1727583919681-5
+    author: k452b (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: employee_roles_pkey
+            name: employee_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: employee_roles_pkey
+            name: role_id
+            type: BIGINT
+        tableName: employee_roles
+- changeSet:
+    id: 1727583919681-6
+    author: k452b (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: projects_pkey
+            name: pid
+            type: BIGINT
+        - column:
+            name: project_name
+            type: VARCHAR(255)
+        tableName: projects
+- changeSet:
+    id: 1727583919681-7
+    author: k452b (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: roles_pkey
+            name: rid
+            type: BIGINT
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: roles
+- changeSet:
+    id: 1727583919681-8
+    author: k452b (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: todo_list_id
+            type: BIGINT
+        - column:
+            name: description
+            type: VARCHAR(255)
+        - column:
+            name: priority
+            type: INTEGER
+        - column:
+            name: title
+            type: VARCHAR(255)
+        tableName: todo_fields
+- changeSet:
+    id: 1727583919681-9
+    author: k452b (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: todo_lists_pkey
+            name: tid
+            type: BIGINT
+        tableName: todo_lists
+- changeSet:
+    id: 1727583919681-10
+    author: k452b (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: role_id
+        baseTableName: employee_roles
+        constraintName: fk398vvu81xw154mvy3g2eytscn
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: rid
+        referencedTableName: roles
+        validate: true
+- changeSet:
+    id: 1727583919681-11
+    author: k452b (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: employee_id
+        baseTableName: employee_roles
+        constraintName: fk3uwwaxeiucvfixgd45etkjgmg
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: employees
+        validate: true
+- changeSet:
+    id: 1727583919681-12
+    author: k452b (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: employee_id
+        baseTableName: employee_projects
+        constraintName: fk5qvhtbabqqm0eko03y1edw0ov
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: employees
+        validate: true
+- changeSet:
+    id: 1727583919681-13
+    author: k452b (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: todo_list_id
+        baseTableName: todo_fields
+        constraintName: fk87phem38o2piu56df4cu59w6p
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: tid
+        referencedTableName: todo_lists
+        validate: true
+- changeSet:
+    id: 1727583919681-14
+    author: k452b (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: designation_id
+        baseTableName: employees
+        constraintName: fk_employee_designation
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: did
+        referencedTableName: designations
+        validate: true
+- changeSet:
+    id: 1727583919681-15
+    author: k452b (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: todo_list_id
+        baseTableName: employees
+        constraintName: fk_employee_todo_list
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: tid
+        referencedTableName: todo_lists
+        validate: true
+- changeSet:
+    id: 1727583919681-16
+    author: k452b (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: project_id
+        baseTableName: employee_projects
+        constraintName: fknxw95o16xcyxe3qaiy1tyarnc
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: pid
+        referencedTableName: projects
+        validate: true
+

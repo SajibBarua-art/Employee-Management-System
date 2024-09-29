@@ -32,8 +32,8 @@ public class SpringSecurityConfig {
 
         http
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/users/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/projects").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/*").permitAll()
                         .anyRequest()
                         .authenticated()
                 );

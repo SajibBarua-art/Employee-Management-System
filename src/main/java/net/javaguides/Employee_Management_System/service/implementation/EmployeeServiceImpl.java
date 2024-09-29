@@ -13,9 +13,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -43,6 +45,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public EmployeeDto createEmployee(EmployeeDto employeeDto) {
@@ -55,6 +59,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         // to convert EmployeeDta into employee
         // because we need to store employee into the database
         Employee employee = EmployeeMapper.mapToEmployee(employeeDto);
+
+        // Encoding password
+        employee.setPassword(passwordEncoder.encode(employee.getPassword()));
 
         // Handle TodoList relationship
         if (employee.getTodoList() != null) {
@@ -96,6 +103,24 @@ public class EmployeeServiceImpl implements EmployeeService {
                 }
                 designation.getEmployees().add(employee);
             }
+        }
+
+        // Handle Role relationship
+        if(employee.getRoles() != null) {
+            Set<Role> roles = new HashSet<>();
+            for(Role role: employee.getRoles()) {
+                if(role.getRid() != null) {
+                    Role existingRole = roleRepository.findById(role.getRid())
+                            .orElseThrow(() -> new RoleNotFoundException(
+                                    messageService.getMessage("role.notfound", role.getRid())
+                            ));
+
+                    roles.add(existingRole);
+                } else {
+                    roles.add(role);
+                }
+            }
+            employee.setRoles(roles);
         }
 
         // Handle Projects relationship
@@ -177,9 +202,10 @@ public class EmployeeServiceImpl implements EmployeeService {
                         messageService.getMessage("employee.notfound", employeeId)
                 ));
 
-        employee.setFirstName(updatedEmployeeDto.getFirstName());
-        employee.setLastName(updatedEmployeeDto.getLastName());
-        employee.setEmail(updatedEmployeeDto.getEmail());
+
+        if(updatedEmployeeDto.getRoles() != null) {
+            employee.setRoles(updatedEmployeeDto.getRoles());
+        }
 
         // Handle TodoList relationship
         if (updatedEmployeeDto.getTodoList() != null) {
