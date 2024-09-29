@@ -49,16 +49,16 @@ public class EmployeeServiceImpl implements EmployeeService {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public EmployeeDto createEmployee(EmployeeDto employeeDto) {
-        if(employeeRepository.existsByEmail(employeeDto.getEmail())) {
-            logger.error("Email Already Exists {}", employeeDto.getEmail());
+    public EmployeeRequestDto createEmployee(EmployeeRequestDto employeeRequestDto) {
+        if(employeeRepository.existsByEmail(employeeRequestDto.getEmail())) {
+            logger.error("Email Already Exists {}", employeeRequestDto.getEmail());
             throw new EmailAlreadyExistsException(
-                    messageService.getMessage("employee.email.exists", employeeDto.getEmail())
+                    messageService.getMessage("employee.email.exists", employeeRequestDto.getEmail())
             );
         }
         // to convert EmployeeDta into employee
         // because we need to store employee into the database
-        Employee employee = EmployeeMapper.mapToEmployee(employeeDto);
+        Employee employee = EmployeeMapper.mapToEmployee(employeeRequestDto);
 
         // Encoding password
         employee.setPassword(passwordEncoder.encode(employee.getPassword()));
@@ -106,8 +106,17 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
 
         // Handle Role relationship
+        // Check if the "USER" role exists
+        Role userRole = roleRepository.findByName("USER")
+            .orElseGet(() -> {
+                // If the "USER" role doesn't exist, create and save it
+                Role newUserRole = new Role();
+                newUserRole.setName("USER");
+                return roleRepository.save(newUserRole);
+            });
+        Set<Role> roles = new HashSet<>();
+        roles.add(userRole);
         if(employee.getRoles() != null) {
-            Set<Role> roles = new HashSet<>();
             for(Role role: employee.getRoles()) {
                 if(role.getRid() != null) {
                     Role existingRole = roleRepository.findById(role.getRid())
@@ -120,8 +129,8 @@ public class EmployeeServiceImpl implements EmployeeService {
                     roles.add(role);
                 }
             }
-            employee.setRoles(roles);
         }
+        employee.setRoles(roles);
 
         // Handle Projects relationship
         if (employee.getProjects() != null) {
@@ -159,7 +168,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         // save into employee jpa entity to database
         Employee savedEmployee = employeeRepository.save(employee);
 
-        return EmployeeMapper.mapToEmployeeDto(savedEmployee);
+        return EmployeeMapper.mapToEmployeeRequestDto(savedEmployee);
     }
 
     @Override

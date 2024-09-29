@@ -3,6 +3,7 @@ package net.javaguides.Employee_Management_System.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.Set;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity // used to specify that a class is an entity and is mapped to a database table
 @Table(name="employees")
 public class Employee {
@@ -26,7 +28,7 @@ public class Employee {
     @Column(name="email_id", nullable = false, unique = true)
     private String email;
 
-    @NonNull
+    @NotBlank
     private String password;
 
     @OneToOne(cascade = CascadeType.ALL)
