@@ -79,6 +79,33 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler({PasswordNotMatchedException.class})
+    public ResponseEntity<Map<String, Object>> handlePasswordNotMatchedException(PasswordNotMatchedException e){
+        logger.error("Handling PasswordNotMatchedException: {}", e.getMessage());
+
+        Map<String, Object> errorDetails = buildError(e.getMessage(), HttpStatus.NOT_ACCEPTABLE.value(), "Password Not Matched");
+
+        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_ACCEPTABLE);
+    }
+
+    @ExceptionHandler({RoleAlreadyExistsException.class})
+    public ResponseEntity<Map<String, Object>> handlePasswordNotMatchedException(RoleAlreadyExistsException e){
+        logger.error("Handling RoleAlreadyExistsException: {}", e.getMessage());
+
+        Map<String, Object> errorDetails = buildError(e.getMessage(), HttpStatus.CONFLICT.value(), "Role Already Exists");
+
+        return new ResponseEntity<>(errorDetails, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler({RequestBodyFormatNotMatchedException.class})
+    public ResponseEntity<Map<String, Object>> handlePasswordNotMatchedException(RequestBodyFormatNotMatchedException e){
+        logger.error("Handling RequestBodyFormatNotMatchedException: {}", e.getMessage());
+
+        Map<String, Object> errorDetails = buildError(e.getMessage(), HttpStatus.NOT_ACCEPTABLE.value(), "Requested Body Format Not Matched");
+
+        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_ACCEPTABLE);
+    }
+
     @ExceptionHandler({RuntimeException.class})
     public ResponseEntity<Object> handleRuntimeException(RuntimeException exception) {
         return ResponseEntity

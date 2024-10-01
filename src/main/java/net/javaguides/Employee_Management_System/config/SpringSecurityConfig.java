@@ -4,14 +4,11 @@ import net.javaguides.Employee_Management_System.filter.JwtFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -32,9 +29,8 @@ public class SpringSecurityConfig {
 
         http
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/api/**").permitAll()
-//                        .requestMatchers(HttpMethod.POST, "/api/public/**").permitAll()
-                        .requestMatchers("/api/public/signup").permitAll()
+                        .requestMatchers("/api/public/**").permitAll()
+                        .requestMatchers(("/api/admin/**")).hasRole("ADMIN")
                         .anyRequest()
                         .authenticated()
                 );

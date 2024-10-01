@@ -2,6 +2,7 @@ package net.javaguides.Employee_Management_System.controller;
 
 import lombok.AllArgsConstructor;
 import net.javaguides.Employee_Management_System.dto.EmployeeDto;
+import net.javaguides.Employee_Management_System.dto.EmployeeRequestDto;
 import net.javaguides.Employee_Management_System.entity.Employee;
 import net.javaguides.Employee_Management_System.service.EmployeeService;
 import org.springframework.http.HttpStatus;
@@ -17,31 +18,23 @@ public class EmployeeController {
     private EmployeeService employeeService;
 
     // Build get employee rest api
-    @GetMapping("{id}")
-    public ResponseEntity<EmployeeDto> getEmployeeById(@PathVariable("id") Long employeeId) {
-        EmployeeDto employeeDto = employeeService.getEmployeeById(employeeId);
+    @GetMapping
+    public ResponseEntity<EmployeeDto> getEmployee() {
+        EmployeeDto employeeDto = employeeService.getEmployee();
         return ResponseEntity.ok(employeeDto);
     }
 
-    // Build get all employees REST api
-    @GetMapping
-    public ResponseEntity<List<EmployeeDto>> getAllEmployees() {
-        List<EmployeeDto> employees = employeeService.getAllEmployees();
-        return ResponseEntity.ok(employees);
-    }
-
     // Build update REST api
-    @PutMapping("{id}")
-    public ResponseEntity<EmployeeDto> updateEmployee(@PathVariable("id") long employeeId,
-                                                      @RequestBody EmployeeDto updatedEmployeeDto) {
-        EmployeeDto employeeDto = employeeService.updateEmployee(employeeId, updatedEmployeeDto);
+    @PutMapping
+    public ResponseEntity<EmployeeDto> updateEmployee(@RequestBody EmployeeRequestDto updatedEmployeeRequestDto) {
+        EmployeeDto employeeDto = employeeService.updateEmployee(updatedEmployeeRequestDto);
         return ResponseEntity.ok(employeeDto);
     }
 
     // Build delete employee rest api
-    @DeleteMapping("{id}")
-    public ResponseEntity<String> deleteEmployee(@PathVariable("id") long employeeId) {
-        employeeService.deleteEmployee(employeeId);
+    @DeleteMapping
+    public ResponseEntity<String> deleteEmployee(@RequestBody EmployeeRequestDto employeeRequestDto) {
+        employeeService.deleteEmployeeByEmail(employeeRequestDto);
         return ResponseEntity.ok("Employee deleted successfully");
     }
 

@@ -2,20 +2,24 @@ package net.javaguides.Employee_Management_System.service;
 
 import net.javaguides.Employee_Management_System.dto.EmployeeDto;
 import net.javaguides.Employee_Management_System.dto.EmployeeRequestDto;
-import org.springframework.security.core.userdetails.UserDetails;
+import net.javaguides.Employee_Management_System.entity.Employee;
 
 import java.util.List;
 
 public interface EmployeeService {
-    EmployeeRequestDto createEmployee(EmployeeRequestDto employeeRequestDto);
+    EmployeeDto createEmployee(EmployeeRequestDto employeeRequestDto);
 
+    EmployeeDto getEmployee();
     EmployeeDto getEmployeeById(Long id);
 
     EmployeeDto assignRoleToEmployee(Long employeeId, Long roleId);
 
     List<EmployeeDto> getAllEmployees();
 
-    EmployeeDto updateEmployee(long employeeId, EmployeeDto updatedEmployeeDto);
+    EmployeeDto updateEmployee(EmployeeRequestDto employeeRequestDto);
 
-    void deleteEmployee(long employeeId);
+    EmployeeDto findEmployeeDtoByEmail(String email);
+    EmployeeRequestDto findEmployeeRequestDtoByEmail(String email);
+
+    void deleteEmployeeByEmail(EmployeeRequestDto employeeRequestDto);
 }

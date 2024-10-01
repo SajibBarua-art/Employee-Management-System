@@ -3,23 +3,24 @@ package net.javaguides.Employee_Management_System.service.implementation;
 import lombok.AllArgsConstructor;
 import net.javaguides.Employee_Management_System.dto.EmployeeDto;
 import net.javaguides.Employee_Management_System.dto.EmployeeRequestDto;
+import net.javaguides.Employee_Management_System.dto.RoleDto;
 import net.javaguides.Employee_Management_System.entity.*;
 import net.javaguides.Employee_Management_System.exception.*;
 import net.javaguides.Employee_Management_System.mapper.EmployeeMapper;
+import net.javaguides.Employee_Management_System.mapper.RoleMapper;
 import net.javaguides.Employee_Management_System.repository.*;
 import net.javaguides.Employee_Management_System.service.EmployeeService;
 import net.javaguides.Employee_Management_System.service.MessageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service // to create spring bean for this class
@@ -49,7 +50,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public EmployeeRequestDto createEmployee(EmployeeRequestDto employeeRequestDto) {
+    public EmployeeDto createEmployee(EmployeeRequestDto employeeRequestDto) {
         if(employeeRepository.existsByEmail(employeeRequestDto.getEmail())) {
             logger.error("Email Already Exists {}", employeeRequestDto.getEmail());
             throw new EmailAlreadyExistsException(
@@ -125,8 +126,6 @@ public class EmployeeServiceImpl implements EmployeeService {
                             ));
 
                     roles.add(existingRole);
-                } else {
-                    roles.add(role);
                 }
             }
         }
@@ -168,7 +167,17 @@ public class EmployeeServiceImpl implements EmployeeService {
         // save into employee jpa entity to database
         Employee savedEmployee = employeeRepository.save(employee);
 
-        return EmployeeMapper.mapToEmployeeRequestDto(savedEmployee);
+        return EmployeeMapper.mapToEmployeeDto(savedEmployee);
+    }
+
+    @Override
+    public EmployeeDto getEmployee() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+
+        EmployeeDto employeeDto = this.findEmployeeDtoByEmail(email);
+
+        return employeeDto;
     }
 
     @Override
@@ -205,52 +214,92 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public EmployeeDto updateEmployee(long employeeId, EmployeeDto updatedEmployeeDto) {
-        Employee employee = employeeRepository.findById(employeeId).orElseThrow(
-                () -> new EmployeeNotFoundException(
-                        messageService.getMessage("employee.notfound", employeeId)
-                ));
+    public EmployeeDto updateEmployee(EmployeeRequestDto updatedEmployeeRequestDto) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
 
+        EmployeeRequestDto employeeRequestDto = this.findEmployeeRequestDtoByEmail(email);
 
-        if(updatedEmployeeDto.getRoles() != null) {
-            employee.setRoles(updatedEmployeeDto.getRoles());
+        // Handle password
+        if(updatedEmployeeRequestDto.getPassword() != null) {
+            employeeRequestDto.setPassword(updatedEmployeeRequestDto.getPassword());
+        }
+
+        // Handle Roles
+        if(updatedEmployeeRequestDto.getRoles() != null) {
+            Set<Role> roles = new HashSet<>();
+            for(Role role: updatedEmployeeRequestDto.getRoles()) {
+                if(role.getRid() != null) {
+                    Role existingRole = roleRepository.findById(role.getRid())
+                            .orElseThrow(() -> new RoleNotFoundException(
+                                    messageService.getMessage("role.notfound", role.getRid())
+                            ));
+                    roles.add(existingRole);
+                }
+            }
+            employeeRequestDto.setRoles(roles);
         }
 
         // Handle TodoList relationship
-        if (updatedEmployeeDto.getTodoList() != null) {
-            employee.setTodoList(updatedEmployeeDto.getTodoList());
+        if (updatedEmployeeRequestDto.getTodoList() != null && updatedEmployeeRequestDto.getTodoList().getTodoFields() != null) {
+            TodoList todoList = employeeRequestDto.getTodoList();
+            todoList.setTodoFields(updatedEmployeeRequestDto.getTodoList().getTodoFields());
         }
 
         // Handle designation relationship
-        if (employee.getDesignation() != null) {
-            Designation designation = employee.getDesignation();
+        if (employeeRequestDto.getDesignation() != null) {
+            Designation designation = employeeRequestDto.getDesignation();
             if (designation.getEmployees() == null) {
                 designation.setEmployees(new ArrayList<>());
             }
-            designation.getEmployees().add(employee);
+            designation.getEmployees().add(EmployeeMapper.mapToEmployee(employeeRequestDto));
         }
 
         // Update Projects
-        List<Project> projects = updatedEmployeeDto.getProjects().stream()
+        List<Project> projects = updatedEmployeeRequestDto.getProjects().stream()
                 .map(projectDto -> {
                     Project project = projectRepository.findById(projectDto.getPid())
                             .orElse(new Project(projectDto.getPid(), projectDto.getProjectName(), new ArrayList<>()));
                     return project;
                 })
                 .collect(Collectors.toList());
-        employee.setProjects(projects);
+        employeeRequestDto.setProjects(projects);
 
-        Employee savedEmployee = employeeRepository.save(employee);
+        Employee savedEmployee = employeeRepository.save(EmployeeMapper.mapToEmployee(employeeRequestDto));
         return EmployeeMapper.mapToEmployeeDto(savedEmployee);
     }
 
     @Override
-    public void deleteEmployee(long employeeId) {
-        Employee employee = employeeRepository.findById(employeeId).orElseThrow(
-                () -> new EmployeeNotFoundException(
-                        messageService.getMessage("employee.notfound", employeeId)
-                ));
+    public EmployeeDto findEmployeeDtoByEmail(String email) {
+        Employee employee = employeeRepository.findByEmail(email);
+        if(employee == null) {
+            throw new EmployeeNotFoundException(messageService.getMessage("employee.notfound.email", email));
+        }
+        return EmployeeMapper.mapToEmployeeDto(employee);
+    }
 
-        employeeRepository.deleteById(employeeId);
+    @Override
+    public EmployeeRequestDto findEmployeeRequestDtoByEmail(String email) {
+        Employee employee = employeeRepository.findByEmail(email);
+        if(employee == null) {
+            throw new EmployeeNotFoundException(messageService.getMessage("employee.notfound.email", email));
+        }
+        return EmployeeMapper.mapToEmployeeRequestDto(employee);
+    }
+
+    @Override
+    public void deleteEmployeeByEmail(EmployeeRequestDto responseEmployeeRequestDto) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+
+        EmployeeRequestDto employeeRequestDto = this.findEmployeeRequestDtoByEmail(email);
+
+        if(employeeRequestDto.getPassword() != responseEmployeeRequestDto.getPassword()) {
+            throw new PasswordNotMatchedException(
+                    messageService.getMessage("password.not.matched")
+            );
+        }
+
+        employeeRepository.deleteById(employeeRequestDto.getId());
     }
 }

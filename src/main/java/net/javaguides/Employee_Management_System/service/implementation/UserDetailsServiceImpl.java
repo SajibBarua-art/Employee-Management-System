@@ -3,7 +3,9 @@ package net.javaguides.Employee_Management_System.service.implementation;
 import lombok.AllArgsConstructor;
 import net.javaguides.Employee_Management_System.entity.Employee;
 import net.javaguides.Employee_Management_System.entity.Role;
+import net.javaguides.Employee_Management_System.exception.EmployeeNotFoundException;
 import net.javaguides.Employee_Management_System.repository.EmployeeRepository;
+import net.javaguides.Employee_Management_System.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,15 +19,17 @@ import java.util.Set;
 public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     EmployeeRepository employeeRepository;
+    @Autowired
+    private MessageService messageService;
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) throws EmployeeNotFoundException {
         // Step 1: Fetch employee by email
         Employee employee = employeeRepository.findByEmail(email);
 
         // Step 2: If employee is not found, throw an exception
         if (employee == null) {
-            throw new UsernameNotFoundException("Employee not found with email: " + email);
+            throw new EmployeeNotFoundException(messageService.getMessage("employee.notfound", email));
         }
 
         // Step 3: Get roles from employee and convert them to a String array

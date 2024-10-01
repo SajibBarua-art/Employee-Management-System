@@ -40,10 +40,10 @@ public class PublicController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<EmployeeRequestDto> createEmployee(@RequestBody EmployeeRequestDto employeeRequestDto) {
+    public ResponseEntity<EmployeeDto> createEmployee(@RequestBody EmployeeRequestDto employeeRequestDto) {
         // @RequestBody: Extract the json from the http request and
         // convert that json into EmployeeDto java object
-        EmployeeRequestDto savedEmployee = employeeService.createEmployee(employeeRequestDto);
+        EmployeeDto savedEmployee = employeeService.createEmployee(employeeRequestDto);
         return new ResponseEntity<>(savedEmployee, HttpStatus.CREATED);
     }
 
