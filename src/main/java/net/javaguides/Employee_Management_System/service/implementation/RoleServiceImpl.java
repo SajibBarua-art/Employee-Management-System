@@ -31,7 +31,7 @@ public class RoleServiceImpl implements RoleService {
     private EmployeeRepository employeeRepository;
 
     @Override
-    public RoleDto getRoleById(long roleId) {
+    public RoleDto getRoleById(Long roleId) {
         Role role = roleRepository.findById(roleId)
                 .orElseThrow(() -> new RoleNotFoundException(
                         messageService.getMessage("role.notfound", roleId)
@@ -88,7 +88,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Transactional
-    public void deleteRole(long roleId) {
+    public void deleteRole(Long roleId) {
         Role role = roleRepository.findById(roleId)
                     .orElseThrow(() -> new RoleNotFoundException(
                             messageService.getMessage("role.notfound", roleId)

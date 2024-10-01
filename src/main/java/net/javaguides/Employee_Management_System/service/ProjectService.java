@@ -5,7 +5,7 @@ import net.javaguides.Employee_Management_System.dto.ProjectDto;
 import java.util.List;
 
 public interface ProjectService {
-    ProjectDto getProjectById(long id);
+    ProjectDto getProjectById(Long id);
 
     List<ProjectDto> getAllProjects();
 
@@ -13,5 +13,5 @@ public interface ProjectService {
 
     ProjectDto updateProject(Long pid, ProjectDto projectDto);
 
-    void deleteProject(long projectId);
+    void deleteProject(Long projectId);
 }

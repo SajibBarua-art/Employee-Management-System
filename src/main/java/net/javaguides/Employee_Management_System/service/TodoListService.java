@@ -5,13 +5,16 @@ import net.javaguides.Employee_Management_System.dto.TodoListDto;
 import java.util.List;
 
 public interface TodoListService {
-    TodoListDto getTodoListById(long id);
+    TodoListDto getTodoList();
+    TodoListDto getTodoList(Long id);
 
     List<TodoListDto> getAllTodoLists();
 
     TodoListDto createTodoList(TodoListDto todoListDto);
 
     TodoListDto updateTodoList(Long pid, TodoListDto todoListDto);
+    TodoListDto updateTodoList(TodoListDto todoListDto);
 
-    void deleteTodoList(long todoListId);
+    void deleteTodoList();
+    void deleteTodoList(Long todoListId);
 }

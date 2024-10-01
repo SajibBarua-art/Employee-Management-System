@@ -5,7 +5,7 @@ import net.javaguides.Employee_Management_System.dto.RoleDto;
 import java.util.List;
 
 public interface RoleService {
-    RoleDto getRoleById(long id);
+    RoleDto getRoleById(Long id);
 
     List<RoleDto> getAllRoles();
 
@@ -13,5 +13,5 @@ public interface RoleService {
 
     RoleDto updateRole(Long rid, RoleDto roleDto);
 
-    void deleteRole(long roleId);
+    void deleteRole(Long roleId);
 }

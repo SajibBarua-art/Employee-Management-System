@@ -3,7 +3,6 @@ package net.javaguides.Employee_Management_System.controller;
 import lombok.AllArgsConstructor;
 import net.javaguides.Employee_Management_System.dto.TodoListDto;
 import net.javaguides.Employee_Management_System.service.TodoListService;
-import net.javaguides.Employee_Management_System.service.TodoListService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,27 +21,22 @@ public class TodoListController {
         return new ResponseEntity<>(savedTodoList, HttpStatus.CREATED);
     }
 
-    @GetMapping("{id}")
-    ResponseEntity<?> getTodoListById(@PathVariable long id){
-        TodoListDto todoListDto = todoListService.getTodoListById(id);
-        return ResponseEntity.ok(todoListDto);
-    }
-
+    // we don't need any id because we are using username from authentication
     @GetMapping
-    ResponseEntity<?> getAllTodoList(){
-        List<TodoListDto> todoLists = todoListService.getAllTodoLists();
-        return ResponseEntity.ok(todoLists);
-    }
-
-    @PutMapping("{id}")
-    ResponseEntity<?> updateTodoList(@PathVariable long id, @RequestBody TodoListDto updatedTodoListDto){
-        TodoListDto todoListDto = todoListService.updateTodoList(id, updatedTodoListDto);
+    ResponseEntity<?> getTodoList(){
+        TodoListDto todoListDto = todoListService.getTodoList();
         return ResponseEntity.ok(todoListDto);
     }
 
-    @DeleteMapping("{id}")
-    public ResponseEntity<?> deleteTodoList(@PathVariable long id){
-        todoListService.deleteTodoList(id);
-        return ResponseEntity.ok("TodoList deleted successfully");
+    @PutMapping
+    ResponseEntity<?> updateTodoList(@RequestBody TodoListDto updatedTodoListDto){
+        TodoListDto todoListDto = todoListService.updateTodoList(updatedTodoListDto);
+        return ResponseEntity.ok(todoListDto);
+    }
+
+    @DeleteMapping()
+    public ResponseEntity<?> deleteTodoList(){
+        todoListService.deleteTodoList();
+        return ResponseEntity.ok("Your TodoList deleted successfully");
     }
 }

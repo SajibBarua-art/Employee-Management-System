@@ -1,11 +1,13 @@
 package net.javaguides.Employee_Management_System.service.implementation;
 
 import lombok.AllArgsConstructor;
+import net.javaguides.Employee_Management_System.dto.EmployeeDto;
 import net.javaguides.Employee_Management_System.dto.TodoListDto;
 import net.javaguides.Employee_Management_System.entity.TodoList;
 import net.javaguides.Employee_Management_System.exception.TodoListNotFoundException;
 import net.javaguides.Employee_Management_System.mapper.TodoListMapper;
 import net.javaguides.Employee_Management_System.repository.TodoListRepository;
+import net.javaguides.Employee_Management_System.service.EmployeeService;
 import net.javaguides.Employee_Management_System.service.MessageService;
 import net.javaguides.Employee_Management_System.service.TodoListService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +25,20 @@ public class TodoListServiceImpl implements TodoListService {
     @Autowired
     private MessageService messageService;
 
+    @Autowired
+    private EmployeeService employeeService;
+
     @Override
-    public TodoListDto getTodoListById(long todoListId) {
+    public TodoListDto getTodoList() {
+        String email = employeeService.getUserEmail();
+
+        EmployeeDto employeeDto = employeeService.findEmployeeDtoByEmail(email);
+
+        return TodoListMapper.mapToTodoListDto(employeeDto.getTodoList());
+    }
+
+    @Override
+    public TodoListDto getTodoList(Long todoListId) {
         TodoList todoList = todoListRepository.findById(todoListId)
                 .orElseThrow(() -> new TodoListNotFoundException(
                    messageService.getMessage("todoList.notfound", todoListId)
@@ -63,12 +77,30 @@ public class TodoListServiceImpl implements TodoListService {
     }
 
     @Override
-    public void deleteTodoList(long todoListId) {
-        TodoList todoList = todoListRepository.findById(todoListId)
+    public TodoListDto updateTodoList(TodoListDto todoListDto) {
+        String email = employeeService.getUserEmail();
+        Long tid = employeeService.findEmployeeDtoByEmail(email).getId();
+
+        return this.updateTodoList(tid, todoListDto);
+    }
+
+    @Override
+    public void deleteTodoList(Long todoListId) {
+        todoListRepository.findById(todoListId)
                 .orElseThrow(() -> new TodoListNotFoundException(
                         messageService.getMessage("todoList.notfound", todoListId)
                 ));
 
         todoListRepository.deleteById(todoListId);
+    }
+
+    @Override
+    public void deleteTodoList() {
+        String email = employeeService.getUserEmail();
+
+        EmployeeDto employeeDto = employeeService.findEmployeeDtoByEmail(email);
+
+        Long tid = employeeDto.getTodoList().getTid();
+        this.deleteTodoList(tid);
     }
 }

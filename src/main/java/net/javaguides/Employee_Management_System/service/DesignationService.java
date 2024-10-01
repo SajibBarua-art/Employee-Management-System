@@ -5,7 +5,7 @@ import net.javaguides.Employee_Management_System.dto.DesignationDto;
 import java.util.List;
 
 public interface DesignationService {
-    DesignationDto getDesignationById(long id);
+    DesignationDto getDesignationById(Long id);
 
     List<DesignationDto> getAllDesignations();
 
@@ -13,5 +13,5 @@ public interface DesignationService {
 
     DesignationDto updateDesignation(Long pid, DesignationDto designationDto);
 
-    void deleteDesignation(long designationId);
+    void deleteDesignation(Long designationId);
 }

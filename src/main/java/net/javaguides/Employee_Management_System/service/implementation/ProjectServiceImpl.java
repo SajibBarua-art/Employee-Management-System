@@ -24,7 +24,7 @@ public class ProjectServiceImpl implements ProjectService {
     private MessageService messageService;
 
     @Override
-    public ProjectDto getProjectById(long projectId) {
+    public ProjectDto getProjectById(Long projectId) {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new ProjectNotFoundException(
                    messageService.getMessage("project.notfound", projectId)
@@ -63,7 +63,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public void deleteProject(long projectId) {
+    public void deleteProject(Long projectId) {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new ProjectNotFoundException(
                         messageService.getMessage("project.notfound", projectId)

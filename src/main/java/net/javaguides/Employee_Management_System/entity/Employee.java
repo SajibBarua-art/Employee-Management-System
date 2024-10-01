@@ -54,7 +54,7 @@ public class Employee {
     )
     private List<Project> projects = new ArrayList<>();
 
-    public Employee(long id, String firstName, String lastName, String email, TodoList todoList, Designation designation, Set<Role> roles, List<Project> projects) {
+    public Employee(Long id, String firstName, String lastName, String email, TodoList todoList, Designation designation, Set<Role> roles, List<Project> projects) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;

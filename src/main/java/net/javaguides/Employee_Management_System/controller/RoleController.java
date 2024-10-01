@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController // this class is capable to handle http request
-@RequestMapping("/api/roles") // to define the base url of all the rest APIs
+@RequestMapping("/api/admin/roles") // to define the base url of all the rest APIs
 @AllArgsConstructor
 public class RoleController {
     private RoleService roleService;
@@ -25,7 +25,7 @@ public class RoleController {
     }
 
     @GetMapping("{rid}")
-    ResponseEntity<?> getRoleById(@PathVariable long rid){
+    ResponseEntity<?> getRoleById(@PathVariable Long rid){
         RoleDto roleDto = roleService.getRoleById(rid);
         return ResponseEntity.ok(roleDto);
     }
@@ -37,13 +37,13 @@ public class RoleController {
     }
 
     @PutMapping("{rid}")
-    ResponseEntity<?> updateRole(@PathVariable long rid, @RequestBody RoleDto updatedRoleDto){
+    ResponseEntity<?> updateRole(@PathVariable Long rid, @RequestBody RoleDto updatedRoleDto){
         RoleDto roleDto = roleService.updateRole(rid, updatedRoleDto);
         return ResponseEntity.ok(roleDto);
     }
 
     @DeleteMapping("{rid}")
-    public ResponseEntity<?> deleteRole(@PathVariable long rid){
+    public ResponseEntity<?> deleteRole(@PathVariable Long rid){
         roleService.deleteRole(rid);
         return ResponseEntity.ok("Role deleted successfully");
     }

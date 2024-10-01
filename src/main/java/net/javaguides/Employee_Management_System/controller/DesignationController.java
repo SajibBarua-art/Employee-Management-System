@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController // this class is capable to handle http request
-@RequestMapping("/api/designations") // to define the base url of all the rest APIs
+@RequestMapping("/api/admin/designations") // to define the base url of all the rest APIs
 @AllArgsConstructor
 public class DesignationController {
     private DesignationService designationService;
@@ -22,7 +22,7 @@ public class DesignationController {
     }
 
     @GetMapping("{id}")
-    ResponseEntity<?> getDesignationById(@PathVariable long id){
+    ResponseEntity<?> getDesignationById(@PathVariable Long id){
         DesignationDto designationDto = designationService.getDesignationById(id);
         return ResponseEntity.ok(designationDto);
     }
@@ -34,13 +34,13 @@ public class DesignationController {
     }
 
     @PutMapping("{id}")
-    ResponseEntity<?> updateDesignation(@PathVariable long id, @RequestBody DesignationDto updatedDesignationDto){
+    ResponseEntity<?> updateDesignation(@PathVariable Long id, @RequestBody DesignationDto updatedDesignationDto){
         DesignationDto designationDto = designationService.updateDesignation(id, updatedDesignationDto);
         return ResponseEntity.ok(designationDto);
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<?> deleteDesignation(@PathVariable long id){
+    public ResponseEntity<?> deleteDesignation(@PathVariable Long id){
         designationService.deleteDesignation(id);
         return ResponseEntity.ok("Designation deleted successfully");
     }

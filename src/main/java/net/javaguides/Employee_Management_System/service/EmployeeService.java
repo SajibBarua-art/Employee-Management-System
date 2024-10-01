@@ -16,10 +16,13 @@ public interface EmployeeService {
 
     List<EmployeeDto> getAllEmployees();
 
+    EmployeeDto updateEmployee(Long id, EmployeeDto employeeDto);
     EmployeeDto updateEmployee(EmployeeRequestDto employeeRequestDto);
 
     EmployeeDto findEmployeeDtoByEmail(String email);
     EmployeeRequestDto findEmployeeRequestDtoByEmail(String email);
 
     void deleteEmployeeByEmail(EmployeeRequestDto employeeRequestDto);
+
+    String getUserEmail();
 }

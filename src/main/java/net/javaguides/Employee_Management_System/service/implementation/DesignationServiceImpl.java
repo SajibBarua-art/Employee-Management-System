@@ -24,7 +24,7 @@ public class DesignationServiceImpl implements DesignationService {
     private MessageService messageService;
 
     @Override
-    public DesignationDto getDesignationById(long designationId) {
+    public DesignationDto getDesignationById(Long designationId) {
         Designation designation = designationRepository.findById(designationId)
                 .orElseThrow(() -> new DesignationNotFoundException(
                    messageService.getMessage("designation.notfound", designationId)
@@ -63,7 +63,7 @@ public class DesignationServiceImpl implements DesignationService {
     }
 
     @Override
-    public void deleteDesignation(long designationId) {
+    public void deleteDesignation(Long designationId) {
         Designation designation = designationRepository.findById(designationId)
                 .orElseThrow(() -> new DesignationNotFoundException(
                         messageService.getMessage("designation.notfound", designationId)
