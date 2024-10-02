@@ -1,6 +1,7 @@
 package net.javaguides.Employee_Management_System.service;
 
 import net.javaguides.Employee_Management_System.dto.DesignationDto;
+import net.javaguides.Employee_Management_System.entity.Designation;
 
 import java.util.List;
 
@@ -9,7 +10,7 @@ public interface DesignationService {
 
     List<DesignationDto> getAllDesignations();
 
-    DesignationDto createDesignation(DesignationDto designationDto);
+    DesignationDto createDesignation(Designation designation);
 
     DesignationDto updateDesignation(Long pid, DesignationDto designationDto);
 

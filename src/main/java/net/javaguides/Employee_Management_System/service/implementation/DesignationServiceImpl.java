@@ -41,8 +41,7 @@ public class DesignationServiceImpl implements DesignationService {
     }
 
     @Override
-    public DesignationDto createDesignation(DesignationDto designationDto) {
-        Designation designation = DesignationMapper.mapToDesignation(designationDto);
+    public DesignationDto createDesignation(Designation designation) {
 
         Designation savedDesignation = designationRepository.save(designation);
 

@@ -1,12 +1,15 @@
 package net.javaguides.Employee_Management_System.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
+import net.javaguides.Employee_Management_System.dto.EmployeeIdDto;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -24,6 +27,6 @@ public class Project {
     private String projectName;
 
     @ManyToMany(mappedBy = "projects", cascade = {CascadeType.ALL})
-    @JsonIgnore // Prevent serialization of Employees when serializing Project
+    @JsonIgnore
     private List<Employee> employees = new ArrayList<>();
 }

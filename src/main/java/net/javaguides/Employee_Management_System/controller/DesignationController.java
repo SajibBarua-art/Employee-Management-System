@@ -2,6 +2,7 @@ package net.javaguides.Employee_Management_System.controller;
 
 import lombok.AllArgsConstructor;
 import net.javaguides.Employee_Management_System.dto.DesignationDto;
+import net.javaguides.Employee_Management_System.entity.Designation;
 import net.javaguides.Employee_Management_System.service.DesignationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +17,8 @@ public class DesignationController {
     private DesignationService designationService;
 
     @PostMapping
-    public ResponseEntity<DesignationDto> createDesignation(@RequestBody DesignationDto designationDto){
-        DesignationDto savedDesignation = designationService.createDesignation(designationDto);
+    public ResponseEntity<DesignationDto> createDesignation(@RequestBody Designation designation){
+        DesignationDto savedDesignation = designationService.createDesignation(designation);
         return new ResponseEntity<>(savedDesignation, HttpStatus.CREATED);
     }
 

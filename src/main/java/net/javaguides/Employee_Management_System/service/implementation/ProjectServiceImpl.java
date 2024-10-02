@@ -41,8 +41,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ProjectDto createProject(ProjectDto projectDto) {
-        Project project = ProjectMapper.mapToProject(projectDto);
+    public ProjectDto createProject(Project project) {
 
         Project savedProject = projectRepository.save(project);
 
@@ -64,7 +63,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public void deleteProject(Long projectId) {
-        Project project = projectRepository.findById(projectId)
+        projectRepository.findById(projectId)
                 .orElseThrow(() -> new ProjectNotFoundException(
                         messageService.getMessage("project.notfound", projectId)
                 ));

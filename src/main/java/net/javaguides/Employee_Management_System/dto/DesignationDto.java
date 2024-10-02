@@ -14,5 +14,5 @@ public class DesignationDto {
     private Long did;
     private String designationName;
 
-    private List<Employee> employees;
+    private List<EmployeeIdDto> employees;
 }

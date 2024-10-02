@@ -17,5 +17,5 @@ public class ProjectDto {
     private Long pid;
     private String projectName;
 
-    private List<Employee> employees = new ArrayList<>();
+    private List<EmployeeIdDto> employees = new ArrayList<>();
 }

@@ -1,6 +1,7 @@
 package net.javaguides.Employee_Management_System.service;
 
 import net.javaguides.Employee_Management_System.dto.ProjectDto;
+import net.javaguides.Employee_Management_System.entity.Project;
 
 import java.util.List;
 
@@ -9,7 +10,7 @@ public interface ProjectService {
 
     List<ProjectDto> getAllProjects();
 
-    ProjectDto createProject(ProjectDto projectDto);
+    ProjectDto createProject(Project project);
 
     ProjectDto updateProject(Long pid, ProjectDto projectDto);
 
