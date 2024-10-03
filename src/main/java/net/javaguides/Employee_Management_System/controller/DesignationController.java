@@ -1,5 +1,6 @@
 package net.javaguides.Employee_Management_System.controller;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import net.javaguides.Employee_Management_System.dto.DesignationDto;
 import net.javaguides.Employee_Management_System.entity.Designation;
@@ -17,7 +18,7 @@ public class DesignationController {
     private DesignationService designationService;
 
     @PostMapping
-    public ResponseEntity<DesignationDto> createDesignation(@RequestBody Designation designation){
+    public ResponseEntity<DesignationDto> createDesignation(@Valid @RequestBody Designation designation){
         DesignationDto savedDesignation = designationService.createDesignation(designation);
         return new ResponseEntity<>(savedDesignation, HttpStatus.CREATED);
     }

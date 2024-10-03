@@ -1,12 +1,10 @@
 package net.javaguides.Employee_Management_System.entity;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
-import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -23,15 +21,19 @@ public class Employee {
     private Long id;
 
     @Column(name="first_name")
+    @NotBlank(message = "First name is mandatory")
     private String firstName;
 
     @Column(name="last_name")
+    @NotBlank(message = "Last Name is mandatory")
     private String lastName;
 
     @Column(name="email_id", nullable = false, unique = true)
+    @NotBlank(message = "Email is mandatory")
+    @Email(message = "Invalid Email Format")
     private String email;
 
-    @NotBlank
+    @NotBlank(message="Password is mandatory")
     private String password;
 
     @OneToOne(cascade = CascadeType.ALL)

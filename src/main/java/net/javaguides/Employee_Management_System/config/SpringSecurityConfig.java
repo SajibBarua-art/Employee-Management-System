@@ -30,7 +30,7 @@ public class SpringSecurityConfig {
         http
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/api/public/**").permitAll()
-//                        .requestMatchers(("/api/admin/**")).hasRole("ADMIN")
+                        .requestMatchers(("/api/admin/**")).hasAuthority("ADMIN")
                         .anyRequest()
                         .authenticated()
                 );

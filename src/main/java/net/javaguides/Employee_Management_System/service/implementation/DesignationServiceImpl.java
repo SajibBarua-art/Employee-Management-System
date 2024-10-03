@@ -11,7 +11,11 @@ import net.javaguides.Employee_Management_System.service.DesignationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Validator;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -63,7 +67,7 @@ public class DesignationServiceImpl implements DesignationService {
 
     @Override
     public void deleteDesignation(Long designationId) {
-        Designation designation = designationRepository.findById(designationId)
+        designationRepository.findById(designationId)
                 .orElseThrow(() -> new DesignationNotFoundException(
                         messageService.getMessage("designation.notfound", designationId)
                 ));

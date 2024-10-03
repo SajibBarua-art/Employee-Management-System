@@ -1,15 +1,11 @@
 package net.javaguides.Employee_Management_System.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-import net.javaguides.Employee_Management_System.dto.EmployeeIdDto;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -24,6 +20,7 @@ public class Project {
     private Long pid;
 
     @Column(name = "project_name")
+    @NotBlank(message = "Project name is mandatory")
     private String projectName;
 
     @ManyToMany(mappedBy = "projects", cascade = {CascadeType.ALL})

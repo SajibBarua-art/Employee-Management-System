@@ -1,18 +1,21 @@
 package net.javaguides.Employee_Management_System.controller.advice;
 
+import jakarta.validation.ConstraintViolationException;
 import net.javaguides.Employee_Management_System.exception.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class GlobalExceptionHandler {
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
@@ -104,6 +107,40 @@ public class GlobalExceptionHandler {
         Map<String, Object> errorDetails = buildError(e.getMessage(), HttpStatus.NOT_ACCEPTABLE.value(), "Requested Body Format Not Matched");
 
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_ACCEPTABLE);
+    }
+
+    @ExceptionHandler({MethodArgumentNotValidException.class})
+    public ResponseEntity<Map<String, Object>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e){
+        logger.error("Handling MethodArgumentNotValidException: {}", e.getMessage());
+        Map<String, Object> errorDetails = new HashMap<>();
+
+        errorDetails.put("timestamp", LocalDateTime.now());
+        e.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errorDetails.put(fieldName, errorMessage);
+        });
+        errorDetails.put("status", HttpStatus.BAD_REQUEST.value());
+        errorDetails.put("error", "Validation failed");
+
+        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({ConstraintViolationException.class})
+    public ResponseEntity<Map<String, Object>> handleConstraintViolationExceptionException(ConstraintViolationException e){
+        logger.error("Handling ConstraintViolationException: {}", e.getMessage());
+        Map<String, Object> errorDetails = new HashMap<>();
+
+        errorDetails.put("timestamp", LocalDateTime.now());
+        e.getConstraintViolations().forEach(violation -> {
+            String fieldName = violation.getPropertyPath().toString();
+            String errorMessage = violation.getMessage();
+            errorDetails.put(fieldName, errorMessage);
+        });
+        errorDetails.put("status", HttpStatus.BAD_REQUEST.value());
+        errorDetails.put("error", "Validation failed");
+
+        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({RuntimeException.class})

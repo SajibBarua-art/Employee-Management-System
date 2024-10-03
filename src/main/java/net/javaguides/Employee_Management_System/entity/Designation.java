@@ -2,6 +2,7 @@ package net.javaguides.Employee_Management_System.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ public class Designation {
     private Long did;
 
     @Column(name = "designation_name")
+    @NotBlank(message = "Designation name is mandatory")
     private String designationName;
 
     @OneToMany(mappedBy = "designation")

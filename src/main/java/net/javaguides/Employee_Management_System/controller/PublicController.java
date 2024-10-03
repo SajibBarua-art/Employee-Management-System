@@ -1,5 +1,6 @@
 package net.javaguides.Employee_Management_System.controller;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import net.javaguides.Employee_Management_System.controller.advice.GlobalExceptionHandler;
 import net.javaguides.Employee_Management_System.dto.EmployeeDto;
@@ -40,7 +41,7 @@ public class PublicController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<EmployeeDto> createEmployee(@RequestBody EmployeeRequestDto employeeRequestDto) {
+    public ResponseEntity<EmployeeDto> createEmployee(@Valid @RequestBody EmployeeRequestDto employeeRequestDto) {
         // @RequestBody: Extract the json from the http request and
         // convert that json into EmployeeDto java object
         EmployeeDto savedEmployee = employeeService.createEmployee(employeeRequestDto);

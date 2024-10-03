@@ -6,7 +6,6 @@ import net.javaguides.Employee_Management_System.entity.Project;
 import net.javaguides.Employee_Management_System.entity.Role;
 import net.javaguides.Employee_Management_System.entity.TodoList;
 
-import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -22,7 +21,6 @@ public class EmployeeRequestDto {
     private String lastName;
     private String email;
 
-    @NotBlank
     private String password;
 
     private TodoList todoList;

@@ -1,5 +1,6 @@
 package net.javaguides.Employee_Management_System.controller;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import net.javaguides.Employee_Management_System.dto.TodoListDto;
 import net.javaguides.Employee_Management_System.service.TodoListService;
@@ -16,7 +17,7 @@ public class TodoListController {
     private TodoListService todoListService;
 
     @PostMapping
-    public ResponseEntity<TodoListDto> createTodoList(@RequestBody TodoListDto todoListDto){
+    public ResponseEntity<TodoListDto> createTodoList(@Valid @RequestBody TodoListDto todoListDto){
         TodoListDto savedTodoList = todoListService.createTodoList(todoListDto);
         return new ResponseEntity<>(savedTodoList, HttpStatus.CREATED);
     }

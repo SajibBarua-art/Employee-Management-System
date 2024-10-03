@@ -1,7 +1,7 @@
 package net.javaguides.Employee_Management_System.controller;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import net.javaguides.Employee_Management_System.dto.EmployeeDto;
 import net.javaguides.Employee_Management_System.dto.ProjectDto;
 import net.javaguides.Employee_Management_System.entity.Project;
 import net.javaguides.Employee_Management_System.service.ProjectService;
@@ -18,7 +18,7 @@ public class ProjectController {
     private ProjectService projectService;
 
     @PostMapping
-    public ResponseEntity<ProjectDto> createProject(@RequestBody Project project){
+    public ResponseEntity<ProjectDto> createProject(@Valid @RequestBody Project project){
         ProjectDto savedProject = projectService.createProject(project);
         return new ResponseEntity<>(savedProject, HttpStatus.CREATED);
     }

@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -23,6 +25,7 @@ public class TodoList {
 
     @ElementCollection
     @CollectionTable(name = "todo_fields", joinColumns = @JoinColumn(name = "todo_list_id"))
+    @Valid
     private List<TodoField> todoFields = new ArrayList<>();
 
     // Embedded class representing the fields in the TodoList
@@ -34,6 +37,7 @@ public class TodoList {
     @ToString
     public static class TodoField {
         @Column(name = "title")
+        @NotBlank(message = "Title field is mandatory")
         private String title;
 
         @Column(name = "description")
