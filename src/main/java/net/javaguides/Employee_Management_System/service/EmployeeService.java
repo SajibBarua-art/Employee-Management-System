@@ -4,7 +4,8 @@ import net.javaguides.Employee_Management_System.dto.EmployeeDto;
 import net.javaguides.Employee_Management_System.dto.EmployeeRequestDto;
 import net.javaguides.Employee_Management_System.entity.Employee;
 
-import java.util.List;
+import java.util.Set;
+import java.util.Set;
 
 public interface EmployeeService {
     EmployeeDto createEmployee(EmployeeRequestDto employeeRequestDto);
@@ -14,7 +15,7 @@ public interface EmployeeService {
 
     EmployeeDto assignRoleToEmployee(Long employeeId, Long roleId);
 
-    List<EmployeeDto> getAllEmployees();
+    Set<EmployeeDto> getAllEmployees();
 
     EmployeeDto updateEmployee(Long id, EmployeeDto employeeDto);
     EmployeeDto updateEmployee(EmployeeRequestDto employeeRequestDto);

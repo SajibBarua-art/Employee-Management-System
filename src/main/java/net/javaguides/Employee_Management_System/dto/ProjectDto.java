@@ -6,8 +6,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.javaguides.Employee_Management_System.entity.Employee;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -17,5 +18,5 @@ public class ProjectDto {
     private Long pid;
     private String projectName;
 
-    private List<EmployeeIdDto> employees = new ArrayList<>();
+    private Set<EmployeeIdDto> employees = new HashSet<>();
 }

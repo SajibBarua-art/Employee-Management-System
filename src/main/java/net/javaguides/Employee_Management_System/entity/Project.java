@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -25,5 +27,5 @@ public class Project {
 
     @ManyToMany(mappedBy = "projects", cascade = {CascadeType.ALL})
     @JsonIgnore
-    private List<Employee> employees = new ArrayList<>();
+    private Set<Employee> employees = new HashSet<>();
 }

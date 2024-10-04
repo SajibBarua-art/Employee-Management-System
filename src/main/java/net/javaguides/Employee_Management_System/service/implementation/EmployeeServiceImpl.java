@@ -63,7 +63,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
             // Add the employee to the Designation's employee list
             if (existingDesignation.getEmployees() == null) {
-                existingDesignation.setEmployees(new ArrayList<>());
+                existingDesignation.setEmployees(new HashSet<>());
             }
             existingDesignation.getEmployees().add(employee);
             return existingDesignation;
@@ -97,8 +97,8 @@ public class EmployeeServiceImpl implements EmployeeService {
         return resultRoles;
     }
 
-    private List<Project> handleProjects(List<Project> projects, Employee employee) {
-        List<Project> resultProjects = new ArrayList<>();
+    private Set<Project> handleProjects(Set<Project> projects, Employee employee) {
+        Set<Project> resultProjects = new HashSet<>();
 
         if (projects != null) {
             for (Project project : projects) {
@@ -109,7 +109,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
                     // Add the employee to the project
                     if (existingProject.getEmployees() == null) {
-                        existingProject.setEmployees(new ArrayList<>());
+                        existingProject.setEmployees(new HashSet<>());
                     }
                     existingProject.getEmployees().add(employee);
                     resultProjects.add(existingProject);
@@ -180,33 +180,31 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public List<EmployeeDto> getAllEmployees() {
-        List<Employee> employees =  employeeRepository.findAll();
-        return employees.stream().map((employee) -> EmployeeMapper.mapToEmployeeDto(employee))
-                .collect(Collectors.toList());
+    public Set<EmployeeDto> getAllEmployees() {
+        Set<Employee> employees = new HashSet<>(employeeRepository.findAll());  // Ensure it's a Set
+        return employees.stream()
+                .map(EmployeeMapper::mapToEmployeeDto)  // Map Employee to EmployeeDto
+                .collect(Collectors.toSet());           // Collect as a Set
     }
 
-    private List<Project> handleProjectsUpdate(List<Project> projects) {
+    private Set<Project> handleProjectsUpdate(Set<Project> projects) {
+        if(projects == null) return null;
+
         return projects.stream()
                 .map(project -> projectRepository.findById(project.getPid())
                         .orElseThrow(() -> new ProjectNotFoundException(
                                 messageService.getMessage("project.notfound", project.getPid())))
                 )
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
-    private Designation handleDesignationUpdate(Employee employee) {
-        if (employee.getDesignation() != null) {
-            Designation designation = designationRepository.findById(employee.getDesignation().getDid())
-                            .orElseThrow(() -> new DesignationNotFoundException(
-                                    messageService.getMessage("designation.notfound", employee.getDesignation().getDid())
-                            ));
-            designation.getEmployees().add(employee);
+    private Designation handleDesignationUpdate(Designation updatedDesignation) {
+        if(updatedDesignation == null) return null;
 
-            return designation;
-        }
-
-        return null;
+        return designationRepository.findById(updatedDesignation.getDid())
+                .orElseThrow(() -> new DesignationNotFoundException(
+                        messageService.getMessage("designation.notfound", updatedDesignation.getDid())
+                ));
     }
 
     @Override
@@ -215,20 +213,14 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .orElseThrow(() -> new EmployeeNotFoundException(
                         messageService.getMessage("employee.notfound", employeeId)));
 
-        // Handle Roles
-        if(employee.getRoles() != null) {
-            employee.setRoles(handleVerifyAllRoles(updatedEmployeeDto.getRoles()));
-        }
+        // Update Roles
+        employee.setRoles(handleVerifyAllRoles(updatedEmployeeDto.getRoles()));
 
-        // Handle Designation relationship
-        if(employee.getDesignation() != null) {
-            employee.setDesignation(handleDesignationUpdate(employee));
-        }
+        // Update Designation
+        employee.setDesignation(handleDesignationUpdate(updatedEmployeeDto.getDesignation()));
 
         // Update Projects
-        if(employee.getProjects() != null) {
-            employee.setProjects(handleProjectsUpdate(updatedEmployeeDto.getProjects()));
-        }
+        employee.setProjects(handleProjectsUpdate(updatedEmployeeDto.getProjects()));
 
         Employee savedEmployee = employeeRepository.save(employee);
         return EmployeeMapper.mapToEmployeeDto(savedEmployee);
@@ -276,16 +268,27 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public void deleteEmployeeByEmail(EmployeeRequestDto responseEmployeeRequestDto) {
         String email = this.getUserEmail();
+        String encryptedPassword = passwordEncoder.encode(responseEmployeeRequestDto.getPassword());
 
-        EmployeeRequestDto employeeRequestDto = this.findEmployeeRequestDtoByEmail(email);
+        Employee employee = employeeRepository.findByEmail(email);
 
-        if(employeeRequestDto.getPassword() != responseEmployeeRequestDto.getPassword()) {
+        // Validate the password match
+        if (!employee.getPassword().equals(encryptedPassword)) {
             throw new PasswordNotMatchedException(
                     messageService.getMessage("password.not.matched")
             );
         }
 
-        employeeRepository.deleteById(employeeRequestDto.getId());
+        // Step 1: Remove the associations between the employee and projects
+        for (Project project : employee.getProjects()) {
+            project.getEmployees().remove(employee); // Remove employee from each project's employees
+        }
+
+        // Step 2: Clear the employee's projects to remove the relationship
+        employee.getProjects().clear();
+
+        // Step 3: Now delete the employee
+        employeeRepository.delete(employee);
     }
 
     @Override

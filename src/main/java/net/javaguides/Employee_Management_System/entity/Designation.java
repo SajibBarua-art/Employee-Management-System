@@ -5,8 +5,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -26,5 +27,5 @@ public class Designation {
 
     @OneToMany(mappedBy = "designation")
     @JsonIgnore
-    private List<Employee> employees = new ArrayList<>();
+    private Set<Employee> employees = new HashSet<>();
 }

@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.javaguides.Employee_Management_System.entity.Employee;
 
-import java.util.List;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -14,5 +14,5 @@ public class DesignationDto {
     private Long did;
     private String designationName;
 
-    private List<EmployeeIdDto> employees;
+    private Set<EmployeeIdDto> employees;
 }

@@ -5,9 +5,9 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Set;
 
 @Data
@@ -40,7 +40,7 @@ public class Employee {
     @JoinColumn(name = "todo_list_id", referencedColumnName = "tid")
     private TodoList todoList;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "designation_id")
     private Designation designation;
 
@@ -51,15 +51,16 @@ public class Employee {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "employee_projects",
             joinColumns = @JoinColumn(name = "employee_id"),
             inverseJoinColumns = @JoinColumn(name = "project_id")
     )
-    private List<Project> projects = new ArrayList<>();
 
-    public Employee(Long id, String firstName, String lastName, String email, TodoList todoList, Designation designation, Set<Role> roles, List<Project> projects) {
+    private Set<Project> projects = new HashSet<>();
+
+    public Employee(Long id, String firstName, String lastName, String email, TodoList todoList, Designation designation, Set<Role> roles, Set<Project> projects) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;

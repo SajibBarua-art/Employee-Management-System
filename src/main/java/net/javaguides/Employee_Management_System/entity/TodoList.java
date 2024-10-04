@@ -1,15 +1,12 @@
 package net.javaguides.Employee_Management_System.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "todo_lists")
@@ -26,7 +23,7 @@ public class TodoList {
     @ElementCollection
     @CollectionTable(name = "todo_fields", joinColumns = @JoinColumn(name = "todo_list_id"))
     @Valid
-    private List<TodoField> todoFields = new ArrayList<>();
+    private Set<TodoField> todoFields = new HashSet<>();
 
     // Embedded class representing the fields in the TodoList
     @Embeddable

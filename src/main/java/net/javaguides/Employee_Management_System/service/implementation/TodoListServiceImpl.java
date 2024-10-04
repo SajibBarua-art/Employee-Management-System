@@ -13,7 +13,7 @@ import net.javaguides.Employee_Management_System.service.TodoListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -48,10 +48,10 @@ public class TodoListServiceImpl implements TodoListService {
     }
 
     @Override
-    public List<TodoListDto> getAllTodoLists() {
-        List<TodoList> todoLists = todoListRepository.findAll();
-        return todoLists.stream().map(todoList -> TodoListMapper.mapToTodoListDto(todoList))
-                .collect(Collectors.toList());
+    public Set<TodoListDto> getAllTodoLists() {
+        return todoListRepository.findAll()
+                .stream().map(todoList -> TodoListMapper.mapToTodoListDto(todoList))
+                .collect(Collectors.toSet());
     }
 
     @Override

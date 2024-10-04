@@ -2,13 +2,13 @@ package net.javaguides.Employee_Management_System.service;
 
 import net.javaguides.Employee_Management_System.dto.TodoListDto;
 
-import java.util.List;
+import java.util.Set;
 
 public interface TodoListService {
     TodoListDto getTodoList();
     TodoListDto getTodoList(Long id);
 
-    List<TodoListDto> getAllTodoLists();
+    Set<TodoListDto> getAllTodoLists();
 
     TodoListDto createTodoList(TodoListDto todoListDto);
 

@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Set;
 
 @RestController // this class is capable to handle http request
 @RequestMapping("/api/projects") // to define the base url of all the rest APIs
@@ -31,7 +31,7 @@ public class ProjectController {
 
     @GetMapping
     ResponseEntity<?> getAllProject(){
-        List<ProjectDto> projects = projectService.getAllProjects();
+        Set<ProjectDto> projects = projectService.getAllProjects();
         return ResponseEntity.ok(projects);
     }
 

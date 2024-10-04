@@ -15,9 +15,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Collection;
-import java.util.List;
+import java.util.Set;
 import java.util.Set;
 
 @Service
@@ -59,8 +59,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return getGrantedAuthorities(roles);
     }
 
-    private List<GrantedAuthority> getGrantedAuthorities(Collection<Role> roles) {
-        List<GrantedAuthority> authorities = new ArrayList<>();
+    private Set<GrantedAuthority> getGrantedAuthorities(Collection<Role> roles) {
+        Set<GrantedAuthority> authorities = new HashSet<>();
         for (Role role : roles) {
             authorities.add(new SimpleGrantedAuthority(role.getName()));
         }

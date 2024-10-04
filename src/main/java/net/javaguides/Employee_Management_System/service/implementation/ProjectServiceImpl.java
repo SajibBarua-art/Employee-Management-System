@@ -2,6 +2,7 @@ package net.javaguides.Employee_Management_System.service.implementation;
 
 import lombok.AllArgsConstructor;
 import net.javaguides.Employee_Management_System.dto.ProjectDto;
+import net.javaguides.Employee_Management_System.entity.Employee;
 import net.javaguides.Employee_Management_System.entity.Project;
 import net.javaguides.Employee_Management_System.exception.ProjectNotFoundException;
 import net.javaguides.Employee_Management_System.mapper.ProjectMapper;
@@ -11,7 +12,8 @@ import net.javaguides.Employee_Management_System.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Set;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,10 +36,10 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<ProjectDto> getAllProjects() {
-        List<Project> projects = projectRepository.findAll();
-        return projects.stream().map(project -> ProjectMapper.mapToProjectDto(project))
-                .collect(Collectors.toList());
+    public Set<ProjectDto> getAllProjects() {
+        return projectRepository.findAll()
+                .stream().map(project -> ProjectMapper.mapToProjectDto(project))
+                .collect(Collectors.toSet());
     }
 
     @Override
@@ -63,10 +65,16 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public void deleteProject(Long projectId) {
-        projectRepository.findById(projectId)
+        Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new ProjectNotFoundException(
                         messageService.getMessage("project.notfound", projectId)
                 ));
+
+        for(Employee employee : project.getEmployees()){
+            employee.getProjects().remove(employee);
+        }
+
+        project.getEmployees().clear();
 
         projectRepository.deleteById(projectId);
     }

@@ -13,7 +13,7 @@ public class ProjectMapper {
                 project.getProjectName(),
                 project.getEmployees().stream()
                         .map(employee -> new EmployeeIdDto(employee.getId()))
-                        .collect(Collectors.toList())
+                        .collect(Collectors.toSet())
         );
     }
 

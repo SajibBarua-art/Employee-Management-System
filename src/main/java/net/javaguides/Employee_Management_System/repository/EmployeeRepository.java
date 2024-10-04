@@ -4,7 +4,7 @@ import net.javaguides.Employee_Management_System.entity.Employee;
 import net.javaguides.Employee_Management_System.entity.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
+import java.util.Set;
 
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
                                                     // <Type of the entity, Type of the primary key>
@@ -13,5 +13,5 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
     Employee findByEmail(String email);
 
-    List<Employee> findAllByRolesContaining(Role role);
+    Set<Employee> findAllByRolesContaining(Role role);
 }

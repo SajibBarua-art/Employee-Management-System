@@ -9,9 +9,9 @@ import net.javaguides.Employee_Management_System.entity.Project;
 import net.javaguides.Employee_Management_System.entity.Role;
 import net.javaguides.Employee_Management_System.entity.TodoList;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Set;
 
 @Getter

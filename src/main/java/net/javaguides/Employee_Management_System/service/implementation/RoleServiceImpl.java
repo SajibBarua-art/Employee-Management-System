@@ -16,7 +16,7 @@ import net.javaguides.Employee_Management_System.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Set;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -41,10 +41,10 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public List<RoleDto> getAllRoles() {
-        List<Role> roles = roleRepository.findAll();
-        return roles.stream().map(role -> RoleMapper.mapToRoleDto(role))
-                .collect(Collectors.toList());
+    public Set<RoleDto> getAllRoles() {
+        return roleRepository.findAll()
+                .stream().map(role -> RoleMapper.mapToRoleDto(role))
+                .collect(Collectors.toSet());
     }
 
     @Override
@@ -95,7 +95,7 @@ public class RoleServiceImpl implements RoleService {
                     ));
 
         // Remove the role from all employees who have it
-        List<Employee> employees = employeeRepository.findAllByRolesContaining(role);
+        Set<Employee> employees = employeeRepository.findAllByRolesContaining(role);
         for (Employee employee : employees) {
             employee.getRoles().remove(role);
             employeeRepository.save(employee);  // Save to update the join table

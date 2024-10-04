@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Set;
 
 @RestController // this class is capable to handle http request
 @RequestMapping("/api/admin/designations") // to define the base url of all the rest APIs
@@ -31,7 +31,7 @@ public class DesignationController {
 
     @GetMapping
     ResponseEntity<?> getAllDesignation(){
-        List<DesignationDto> projects = designationService.getAllDesignations();
+        Set<DesignationDto> projects = designationService.getAllDesignations();
         return ResponseEntity.ok(projects);
     }
 

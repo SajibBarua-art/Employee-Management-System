@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Set;
 
 @RestController // this class is capable to handle http request
 @RequestMapping("/api/admin/roles") // to define the base url of all the rest APIs
@@ -34,7 +34,7 @@ public class RoleController {
 
     @GetMapping
     ResponseEntity<?> getAllRole(){
-        List<RoleDto> roles = roleService.getAllRoles();
+        Set<RoleDto> roles = roleService.getAllRoles();
         return ResponseEntity.ok(roles);
     }
 

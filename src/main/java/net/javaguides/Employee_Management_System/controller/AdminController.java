@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Set;
 
 @RestController // this class is capable to handle http request
 @RequestMapping("/api/admin") // to define the base url of all the rest APIs
@@ -30,8 +30,8 @@ public class AdminController {
 
     // Build get all employees REST api
     @GetMapping("/employees")
-    public ResponseEntity<List<EmployeeDto>> getAllEmployees() {
-        List<EmployeeDto> employees = employeeService.getAllEmployees();
+    public ResponseEntity<Set<EmployeeDto>> getAllEmployees() {
+        Set<EmployeeDto> employees = employeeService.getAllEmployees();
         return ResponseEntity.ok(employees);
     }
 
@@ -53,7 +53,7 @@ public class AdminController {
     // Builds get all todoList REST api
     @GetMapping("/todoLists")
     ResponseEntity<?> getAllTodoList(){
-        List<TodoListDto> todoLists = todoListService.getAllTodoLists();
+        Set<TodoListDto> todoLists = todoListService.getAllTodoLists();
         return ResponseEntity.ok(todoLists);
     }
 

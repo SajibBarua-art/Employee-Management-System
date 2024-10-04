@@ -68,7 +68,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, Object>> handleTodoListNotFoundException(TodoListNotFoundException e){
         logger.error("Handling TodoListNotFoundException: {}", e.getMessage());
 
-        Map<String, Object> errorDetails = buildError(e.getMessage(), HttpStatus.NOT_FOUND.value(), "Todo List Not Found");
+        Map<String, Object> errorDetails = buildError(e.getMessage(), HttpStatus.NOT_FOUND.value(), "Todo Set Not Found");
 
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }

@@ -9,9 +9,7 @@ import net.javaguides.Employee_Management_System.entity.Designation;
 import net.javaguides.Employee_Management_System.entity.Role;
 import net.javaguides.Employee_Management_System.entity.TodoList;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 
@@ -30,5 +28,5 @@ public class EmployeeDto {
     private TodoList todoList;
     private Designation designation;
     private Set<Role> roles = new HashSet<>();
-    private List<Project> projects = new ArrayList<>();
+    private Set<Project> projects = new HashSet<>();
 }
