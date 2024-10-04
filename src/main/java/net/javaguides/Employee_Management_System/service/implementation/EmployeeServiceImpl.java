@@ -61,7 +61,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                     .orElseThrow(() -> new DesignationNotFoundException(
                             messageService.getMessage("designation.notfound", designation.getDid())));
 
-            // Add the employee to the Designation's employee list
+            // Add the employee to the Designation's employee set
             if (existingDesignation.getEmployees() == null) {
                 existingDesignation.setEmployees(new HashSet<>());
             }
@@ -181,7 +181,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Set<EmployeeDto> getAllEmployees() {
-        Set<Employee> employees = new HashSet<>(employeeRepository.findAll());  // Ensure it's a Set
+        List<Employee> employees = employeeRepository.findAll();
+
         return employees.stream()
                 .map(EmployeeMapper::mapToEmployeeDto)  // Map Employee to EmployeeDto
                 .collect(Collectors.toSet());           // Collect as a Set
@@ -268,26 +269,20 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public void deleteEmployeeByEmail(EmployeeRequestDto responseEmployeeRequestDto) {
         String email = this.getUserEmail();
-        String encryptedPassword = passwordEncoder.encode(responseEmployeeRequestDto.getPassword());
 
         Employee employee = employeeRepository.findByEmail(email);
 
-        // Validate the password match
-        if (!employee.getPassword().equals(encryptedPassword)) {
+        String rawPassword = responseEmployeeRequestDto.getPassword();
+
+        // validate the password match
+        if (!passwordEncoder.matches(rawPassword, employee.getPassword())) {
             throw new PasswordNotMatchedException(
                     messageService.getMessage("password.not.matched")
             );
         }
 
-        // Step 1: Remove the associations between the employee and projects
-        for (Project project : employee.getProjects()) {
-            project.getEmployees().remove(employee); // Remove employee from each project's employees
-        }
+        employee.removeAllProjects();
 
-        // Step 2: Clear the employee's projects to remove the relationship
-        employee.getProjects().clear();
-
-        // Step 3: Now delete the employee
         employeeRepository.delete(employee);
     }
 

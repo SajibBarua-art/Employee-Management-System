@@ -70,12 +70,8 @@ public class ProjectServiceImpl implements ProjectService {
                         messageService.getMessage("project.notfound", projectId)
                 ));
 
-        for(Employee employee : project.getEmployees()){
-            employee.getProjects().remove(employee);
-        }
+        project.removeAllEmployees();
 
-        project.getEmployees().clear();
-
-        projectRepository.deleteById(projectId);
+        projectRepository.delete(project);
     }
 }

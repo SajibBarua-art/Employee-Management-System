@@ -11,7 +11,6 @@ import java.util.Set;
 
 @Getter
 @Setter
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -25,7 +24,19 @@ public class Project {
     @NotBlank(message = "Project name is mandatory")
     private String projectName;
 
-    @ManyToMany(mappedBy = "projects", cascade = {CascadeType.ALL})
+    @ManyToMany(mappedBy = "projects", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JsonIgnore
     private Set<Employee> employees = new HashSet<>();
+
+    public void removeEmployee(Employee employee) {
+        this.employees.remove(employee);
+        employee.getProjects().remove(this);
+    }
+
+    // Method to remove all employee associations
+    public void removeAllEmployees() {
+        for (Employee employee : new HashSet<>(employees)) {
+            employee.removeProject(this);
+        }
+    }
 }

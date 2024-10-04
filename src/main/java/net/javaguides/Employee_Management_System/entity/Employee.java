@@ -10,7 +10,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity // used to specify that a class is an entity and is mapped to a database table
@@ -36,14 +37,17 @@ public class Employee {
     @NotBlank(message="Password is mandatory")
     private String password;
 
+    // unidirectional
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "todo_list_id", referencedColumnName = "tid")
     private TodoList todoList;
 
+    // Bidirectional
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "designation_id")
     private Designation designation;
 
+    // Bidirectional
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "employee_roles",
@@ -51,13 +55,13 @@ public class Employee {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    // unidirectional
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(
             name = "employee_projects",
             joinColumns = @JoinColumn(name = "employee_id"),
             inverseJoinColumns = @JoinColumn(name = "project_id")
     )
-
     private Set<Project> projects = new HashSet<>();
 
     public Employee(Long id, String firstName, String lastName, String email, TodoList todoList, Designation designation, Set<Role> roles, Set<Project> projects) {
@@ -69,5 +73,18 @@ public class Employee {
         this.designation = designation;
         this.roles = roles;
         this.projects = projects;
+    }
+
+    // Method to remove a project
+    public void removeProject(Project project) {
+        this.projects.remove(project);
+        project.getEmployees().remove(this);
+    }
+
+    // Method to remove all project associations
+    public void removeAllProjects() {
+        for (Project project : new HashSet<>(projects)) {
+            project.removeEmployee(this);
+        }
     }
 }
