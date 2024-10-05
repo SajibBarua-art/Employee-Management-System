@@ -40,4 +40,10 @@ public class TodoListController {
         todoListService.deleteTodoList();
         return ResponseEntity.ok("Your TodoList deleted successfully");
     }
+
+    @PutMapping("/todoFields")
+    public ResponseEntity<?> updateTodoFields(@RequestBody TodoListDto updatedTodoListDto){
+        TodoListDto todoListDto = todoListService.updateTodoFields(updatedTodoListDto);
+        return ResponseEntity.ok(todoListDto);
+    }
 }

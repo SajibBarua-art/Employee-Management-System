@@ -3,9 +3,11 @@ package net.javaguides.Employee_Management_System.service.implementation;
 import lombok.AllArgsConstructor;
 import net.javaguides.Employee_Management_System.dto.EmployeeDto;
 import net.javaguides.Employee_Management_System.dto.TodoListDto;
+import net.javaguides.Employee_Management_System.entity.Employee;
 import net.javaguides.Employee_Management_System.entity.TodoList;
 import net.javaguides.Employee_Management_System.exception.TodoListNotFoundException;
 import net.javaguides.Employee_Management_System.mapper.TodoListMapper;
+import net.javaguides.Employee_Management_System.repository.EmployeeRepository;
 import net.javaguides.Employee_Management_System.repository.TodoListRepository;
 import net.javaguides.Employee_Management_System.service.EmployeeService;
 import net.javaguides.Employee_Management_System.service.MessageService;
@@ -27,6 +29,8 @@ public class TodoListServiceImpl implements TodoListService {
 
     @Autowired
     private EmployeeService employeeService;
+    @Autowired
+    private EmployeeRepository employeeRepository;
 
     @Override
     public TodoListDto getTodoList() {
@@ -95,12 +99,27 @@ public class TodoListServiceImpl implements TodoListService {
     }
 
     @Override
+    public TodoListDto updateTodoFields(TodoListDto updatedTodoListDto) {
+        String email = employeeService.getUserEmail();
+        Employee employee = employeeRepository.findByEmail(email);
+        TodoList todoList = employee.getTodoList();
+
+        todoList.setTodoFields(updatedTodoListDto.getTodoFields());
+
+        TodoList updatedTodoList = todoListRepository.save(todoList);
+        return TodoListMapper.mapToTodoListDto(updatedTodoList);
+    }
+
+    @Override
     public void deleteTodoList() {
         String email = employeeService.getUserEmail();
 
-        EmployeeDto employeeDto = employeeService.findEmployeeDtoByEmail(email);
+        Employee employee = employeeRepository.findByEmail(email);
 
-        Long tid = employeeDto.getTodoList().getTid();
+        employee.setTodoList(null);
+        employeeRepository.save(employee);
+
+        Long tid = employee.getTodoList().getTid();
         this.deleteTodoList(tid);
     }
 }

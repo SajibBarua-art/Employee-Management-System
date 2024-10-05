@@ -1,5 +1,6 @@
 package net.javaguides.Employee_Management_System.service.implementation;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import net.javaguides.Employee_Management_System.dto.DesignationDto;
 import net.javaguides.Employee_Management_System.entity.Designation;
@@ -66,6 +67,7 @@ public class DesignationServiceImpl implements DesignationService {
     }
 
     @Override
+    @Transactional
     public void deleteDesignation(Long designationId) {
         Designation designation = designationRepository.findById(designationId)
                 .orElseThrow(() -> new DesignationNotFoundException(

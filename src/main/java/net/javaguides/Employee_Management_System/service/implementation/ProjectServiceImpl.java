@@ -1,5 +1,6 @@
 package net.javaguides.Employee_Management_System.service.implementation;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import net.javaguides.Employee_Management_System.dto.ProjectDto;
 import net.javaguides.Employee_Management_System.entity.Employee;
@@ -64,6 +65,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    @Transactional
     public void deleteProject(Long projectId) {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new ProjectNotFoundException(

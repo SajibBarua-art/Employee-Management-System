@@ -17,4 +17,6 @@ public interface TodoListService {
 
     void deleteTodoList();
     void deleteTodoList(Long todoListId);
+
+    TodoListDto updateTodoFields(TodoListDto TodoListDto);
 }

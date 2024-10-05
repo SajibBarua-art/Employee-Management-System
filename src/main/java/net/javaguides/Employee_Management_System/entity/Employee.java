@@ -6,8 +6,6 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.util.HashSet;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.Set;
 
 @Getter
@@ -55,7 +53,7 @@ public class Employee {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
-    // unidirectional
+    // Bidirectional
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(
             name = "employee_projects",
@@ -85,6 +83,19 @@ public class Employee {
     public void removeAllProjects() {
         for (Project project : new HashSet<>(projects)) {
             project.removeEmployee(this);
+        }
+    }
+
+    // Method to remove a role
+    public void removeRole(Role role) {
+        this.roles.remove(role);
+        role.getEmployees().remove(this);
+    }
+
+    // Method to remove all role associations
+    public void removeAllRoles() {
+        for (Role role : new HashSet<>(roles)) {
+            role.removeEmployee(this);
         }
     }
 }

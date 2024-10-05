@@ -3,7 +3,9 @@ package net.javaguides.Employee_Management_System.controller;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import net.javaguides.Employee_Management_System.controller.advice.GlobalExceptionHandler;
+import net.javaguides.Employee_Management_System.dto.EmployeeDto;
 import net.javaguides.Employee_Management_System.dto.RoleDto;
+import net.javaguides.Employee_Management_System.entity.Role;
 import net.javaguides.Employee_Management_System.service.RoleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,25 +23,25 @@ public class RoleController {
     private RoleService roleService;
 
     @PostMapping
-    public ResponseEntity<RoleDto> createRole(@RequestBody RoleDto roleDto){
-        RoleDto savedRole = roleService.createRole(roleDto);
+    public ResponseEntity<RoleDto> createRole(@RequestBody Role role){
+        RoleDto savedRole = roleService.createRole(role);
         return new ResponseEntity<>(savedRole, HttpStatus.CREATED);
     }
 
     @GetMapping("{rid}")
-    ResponseEntity<?> getRoleById(@PathVariable Long rid){
+    public ResponseEntity<?> getRoleById(@PathVariable Long rid){
         RoleDto roleDto = roleService.getRoleById(rid);
         return ResponseEntity.ok(roleDto);
     }
 
     @GetMapping
-    ResponseEntity<?> getAllRole(){
+    public ResponseEntity<?> getAllRole(){
         Set<RoleDto> roles = roleService.getAllRoles();
         return ResponseEntity.ok(roles);
     }
 
     @PutMapping("{rid}")
-    ResponseEntity<?> updateRole(@PathVariable Long rid, @RequestBody RoleDto updatedRoleDto){
+    public ResponseEntity<?> updateRole(@PathVariable Long rid, @RequestBody RoleDto updatedRoleDto){
         RoleDto roleDto = roleService.updateRole(rid, updatedRoleDto);
         return ResponseEntity.ok(roleDto);
     }

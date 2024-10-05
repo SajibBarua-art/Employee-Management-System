@@ -1,5 +1,6 @@
 package net.javaguides.Employee_Management_System.service.implementation;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import net.javaguides.Employee_Management_System.dto.EmployeeDto;
 import net.javaguides.Employee_Management_System.dto.EmployeeRequestDto;
@@ -238,10 +239,14 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
 
         // Handle TodoList relationship (if needed)
-        if (updatedEmployeeRequestDto.getTodoList() != null &&
-                updatedEmployeeRequestDto.getTodoList().getTodoFields() != null) {
-            TodoList todoList = employeeRequestDto.getTodoList();
-            todoList.setTodoFields(updatedEmployeeRequestDto.getTodoList().getTodoFields());
+        if (updatedEmployeeRequestDto.getTodoList() != null) {
+            Long tid = updatedEmployeeRequestDto.getTodoList().getTid();
+            TodoList todoList = todoListRepository.findById(tid)
+                    .orElseThrow(() -> new TodoListNotFoundException(
+                            messageService.getMessage("todoList.notfound", tid)
+                    ));
+
+            employeeRequestDto.setTodoList(todoList);
         }
 
         Employee savedEmployee = employeeRepository.save(EmployeeMapper.mapToEmployee(employeeRequestDto));
@@ -267,6 +272,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    @Transactional
     public void deleteEmployeeByEmail(EmployeeRequestDto responseEmployeeRequestDto) {
         String email = this.getUserEmail();
 
@@ -275,6 +281,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         String rawPassword = responseEmployeeRequestDto.getPassword();
 
         // validate the password match
+
         if (!passwordEncoder.matches(rawPassword, employee.getPassword())) {
             throw new PasswordNotMatchedException(
                     messageService.getMessage("password.not.matched")
@@ -282,6 +289,8 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
 
         employee.removeAllProjects();
+
+        employee.removeAllRoles();
 
         employeeRepository.delete(employee);
     }

@@ -2,12 +2,14 @@ package net.javaguides.Employee_Management_System.service.implementation;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import net.javaguides.Employee_Management_System.dto.EmployeeDto;
 import net.javaguides.Employee_Management_System.dto.RoleDto;
 import net.javaguides.Employee_Management_System.entity.Employee;
 import net.javaguides.Employee_Management_System.entity.Role;
 import net.javaguides.Employee_Management_System.exception.RequestBodyFormatNotMatchedException;
 import net.javaguides.Employee_Management_System.exception.RoleAlreadyExistsException;
 import net.javaguides.Employee_Management_System.exception.RoleNotFoundException;
+import net.javaguides.Employee_Management_System.mapper.EmployeeMapper;
 import net.javaguides.Employee_Management_System.mapper.RoleMapper;
 import net.javaguides.Employee_Management_System.repository.EmployeeRepository;
 import net.javaguides.Employee_Management_System.repository.RoleRepository;
@@ -48,21 +50,21 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public RoleDto createRole(RoleDto roleDto) {
-        if(roleDto == null || roleDto.getName() == null) {
+    public RoleDto createRole(Role role) {
+        if(role == null || role.getName() == null) {
             // to handle null name
             throw new RequestBodyFormatNotMatchedException(messageService.getMessage(
                     "format.not.matched", "name"
             ));
         }
 
-        Optional<Role> role = roleRepository.findByName(roleDto.getName());
-        if(role.isPresent()) {
+        Optional<Role> responseRole = roleRepository.findByName(role.getName());
+        if(responseRole.isPresent()) {
             throw new RoleAlreadyExistsException(
-                    messageService.getMessage("role.exists", roleDto.getName())
+                    messageService.getMessage("role.exists", role.getName())
             );
         }
-        Role savedRole = roleRepository.save(RoleMapper.mapToRole(roleDto));
+        Role savedRole = roleRepository.save(role);
 
         return RoleMapper.mapToRoleDto(savedRole);
     }
@@ -94,13 +96,8 @@ public class RoleServiceImpl implements RoleService {
                             messageService.getMessage("role.notfound", roleId)
                     ));
 
-        // Remove the role from all employees who have it
-        Set<Employee> employees = employeeRepository.findAllByRolesContaining(role);
-        for (Employee employee : employees) {
-            employee.getRoles().remove(role);
-            employeeRepository.save(employee);  // Save to update the join table
-        }
+        role.removeAllEmployees();
 
-        roleRepository.deleteById(roleId);
+        roleRepository.delete(role);
     }
 }
