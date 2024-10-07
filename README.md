@@ -88,40 +88,6 @@ Provide a step-by-step guide to setting up the project locally.
    jwt.util.secret.key=your_secret_key
    ```
 ---
-## Usage
-1. **Firstly, to create a new employee or sign up, navigate to:**
-   ```
-   http://localhost:8080/api/public/signup
-   ```
-   Into the Postman >> body >> raw >> json, pass them:
-   ```
-   {
-       "firstName": "Robin",
-       "lastName": "Robin",
-       "email": "robin@gmail.com",
-       "password": "robin"
-   }
-2. **Secondly, to log in, navigate to:**
-   ```
-   http://localhost:8080/api/public/login
-   ```
-   Into the Postman >> body >> raw >> json, pass them:
-   ```
-   {
-       "email": "robin@gmail.com",
-       "password": "robin"
-   }
-   ```
-   After succesfull log in, you will get a **Bearer** token.
-3. **To set Bearer token in Postman:**
-   Postman >> Authorization >> Auth Type >> Bearer Token.
-4. **To role based access:**
-    - USER: You can only access API endpoints with the **/api/employees/**
-    - ADMIN: To access API endpoints with the **/api/admin/**
-
-   For more Details: [(visit the Postman collection)](https://www.postman.com/ems888-0439/workspace/ems-workspace/collection/36644546-70843a3f-bb01-49cd-80d2-d357ab33acff?action=share&creator=36644546)
-
----
 
 ## Usage
 1. **Firstly, to create a new employee or sign up, navigate to:**
