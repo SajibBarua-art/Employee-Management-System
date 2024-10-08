@@ -17,10 +17,10 @@
 ## Features
 - Manage employee data and related entities.
 - Connect employees to multiple entities such as:
-    - **Todo List**: Task management for employees.
-    - **Designation**: Employee job roles and responsibilities.
-    - **Project**: Employees assigned to various company projects.
-    - **Role**: Role-based access control for different functionalities.
+   - **Todo List**: Task management for employees.
+   - **Designation**: Employee job roles and responsibilities.
+   - **Project**: Employees assigned to various company projects.
+   - **Role**: Role-based access control for different functionalities.
 - Log in and sign up features are also included.
 - Used Spring Boot Security and JWT.
 - RESTful API for CRUD operations on employees and their associated data.
@@ -48,7 +48,7 @@ Provide a step-by-step guide to setting up the project locally.
    ```
 3. **Build your project:** (using Maven)
    ```bash
-   mvn clear install
+   mvn clean install
    ```
 4. **Configure the database:**
 
