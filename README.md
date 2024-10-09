@@ -40,7 +40,7 @@ Provide a step-by-step guide to setting up the project locally.
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/SajibBarua-art/Employee-Management-System
+   git clone https://github.com/SajibBarua-art/Employee-Management-System.git
    ```
 2. **Navigate to the project directory:**
    ```bash
